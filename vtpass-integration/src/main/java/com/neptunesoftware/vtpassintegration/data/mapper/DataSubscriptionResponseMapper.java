@@ -2,9 +2,10 @@ package com.neptunesoftware.vtpassintegration.data.mapper;
 
 import com.neptunesoftware.vtpassintegration.data.response.DataSubscriptionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
-
+@Component
 public class DataSubscriptionResponseMapper implements Function<DataSubscriptionResponse, TransactionRequest> {
     @Override
     public TransactionRequest apply(DataSubscriptionResponse dataSubscriptionResponse) {
