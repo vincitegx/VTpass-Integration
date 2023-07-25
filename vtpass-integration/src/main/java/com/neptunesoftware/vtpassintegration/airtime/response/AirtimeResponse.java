@@ -1,16 +1,30 @@
 package com.neptunesoftware.vtpassintegration.airtime.response;
 
+import lombok.NonNull;
+
 public class AirtimeResponse {
 
-    private Integer code ;
+    @NonNull
+    private String code ;
+
+    private String response_description ;
+
+    public String getResponse_description() {
+        return response_description;
+    }
+
+    public void setResponse_description(String response_description) {
+        this.response_description = response_description;
+    }
 
     private String requestId;
-    private Integer transactionId ;
+    private String transactionId ;
 
-    private Integer amount;
+    private String amount;
 
-    public AirtimeResponse(Integer code, String requestId, Integer transactionId, Integer amount, TransactionDate transaction_date) {
+    public AirtimeResponse(String code,String response_description, String requestId, String transactionId, String amount, TransactionDate transaction_date) {
         this.code = code;
+        this.response_description =response_description;
         this.requestId = requestId;
         this.transactionId = transactionId;
         this.amount = amount;
@@ -20,11 +34,11 @@ public class AirtimeResponse {
     public AirtimeResponse() {
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -36,19 +50,19 @@ public class AirtimeResponse {
         this.requestId = requestId;
     }
 
-    public Integer getTransactionId() {
+    public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Integer transactionId) {
+    public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
 
-    public Integer getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
