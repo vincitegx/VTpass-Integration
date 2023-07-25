@@ -22,7 +22,7 @@ public class DataSubscriptionService {
     private final DataSubscriptionResponseMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
 
-    public TransactionResponse subscribeForData(DataSubscriptionRequest dataSubscriptionRequest){
+    public int subscribeForData(DataSubscriptionRequest dataSubscriptionRequest){
         dataSubscriptionRequest.setRequestId(requestIdGenerator.apply(4));
         DataSubscriptionResponse dataSubscriptionResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
@@ -33,7 +33,7 @@ public class DataSubscriptionService {
                 .bodyToMono(DataSubscriptionResponse.class)
                 .block();
         TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
-        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
+        int transactionResponse = transactionService.saveTransaction(transactionRequest);
         return transactionResponse;
     }
 }

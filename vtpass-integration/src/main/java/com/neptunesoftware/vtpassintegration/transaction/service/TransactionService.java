@@ -12,7 +12,7 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
 
-    public TransactionResponse saveTransaction(TransactionRequest transactionRequest){
+    public int saveTransaction(TransactionRequest transactionRequest){
         return transactionRepository.saveTransaction(transactionRequest);
     }
 
