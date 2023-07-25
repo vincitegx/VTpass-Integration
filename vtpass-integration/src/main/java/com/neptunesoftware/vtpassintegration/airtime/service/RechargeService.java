@@ -32,7 +32,7 @@ public class RechargeService {
                 .retrieve()
                 .bodyToMono(AirtimeResponse.class)
                 .block();
-        TransactionRequest transactionRequest = airtimeRechargeResponseMapper.apply(airtimeResponse);
+        TransactionRequest transactionRequest = airtimeRechargeResponseMapper.apply(airtimeResponse,airtimeRequest);
         TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
         return transactionResponse;
 
