@@ -1,6 +1,5 @@
 package com.neptunesoftware.vtpassintegration.config;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,4 +15,6 @@ public class Credentials {
     private String secretKey;
     private String phoneNumber;
     private String baseUrl;
+    private String channelName;
+    private String paymentCurrency;
 }

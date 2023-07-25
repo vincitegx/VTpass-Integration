@@ -10,8 +10,6 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -34,7 +32,7 @@ public class DataSubscriptionService {
                 .retrieve()
                 .bodyToMono(DataSubscriptionResponse.class)
                 .block();
-        TransactionRequest transactionRequest = mapper.apply(dataSubscriptionResponse);
+        TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
         TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
         return transactionResponse;
     }
