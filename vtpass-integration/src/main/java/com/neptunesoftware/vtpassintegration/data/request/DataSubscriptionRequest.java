@@ -1,18 +1,20 @@
 package com.neptunesoftware.vtpassintegration.data.request;
 
+import lombok.Data;
 import lombok.NonNull;
+import lombok.Setter;
 
-public record DataSubscriptionRequest(
+@Data
+public class DataSubscriptionRequest {
         @NonNull
-        String requestId,
+        private String requestId;
         @NonNull
-        String serviceId,
+        private String serviceId;
         @NonNull
-        String billersCode,
+        private String billersCode;
         @NonNull
-        String variationCode,
-        Integer amount,
+        private String variationCode;
+        Integer amount;
         @NonNull
-        Integer phone
-) {
+        private Integer phone;
 }
