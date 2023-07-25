@@ -2,7 +2,6 @@ package com.neptunesoftware.vtpassintegration.data.request;
 
 import lombok.Data;
 import lombok.NonNull;
-import lombok.Setter;
 
 @Data
 public class DataSubscriptionRequest {

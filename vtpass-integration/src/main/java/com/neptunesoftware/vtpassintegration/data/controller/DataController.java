@@ -19,7 +19,7 @@ public class DataController {
 
     private DataSubscriptionService dataSubscriptionService;
     @PostMapping
-    public ResponseEntity<?> handleDataSubscription(@Validated @RequestBody DataSubscriptionRequest dataSubscriptionRequest) {
+    public ResponseEntity<?> handleDataSubscription(@RequestBody DataSubscriptionRequest dataSubscriptionRequest) {
         return ResponseEntity.ok(dataSubscriptionService.subscribeForData(dataSubscriptionRequest));
     }
 
