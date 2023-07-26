@@ -23,7 +23,7 @@ public class DataSubscriptionResponseMapper {
                 .isReversal("N")
                 .narration(dataSubscriptionResponse.content().transactions().product_name())
                 .paymentCurr(credentials.getPaymentCurrency())
-                .serviceId(dataSubscriptionRequest.getServiceId())
+                .serviceId(dataSubscriptionRequest.getServiceID())
                 .taxAmount(null)
                 .tranStatus(dataSubscriptionResponse.content().transactions().status())
                 .tranType(dataSubscriptionResponse.content().transactions().type())

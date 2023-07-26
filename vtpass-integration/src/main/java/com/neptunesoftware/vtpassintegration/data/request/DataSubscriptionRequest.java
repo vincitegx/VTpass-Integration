@@ -5,15 +5,14 @@ import lombok.NonNull;
 
 @Data
 public class DataSubscriptionRequest {
+        private String request_id;
         @NonNull
-        private String requestId;
-        @NonNull
-        private String serviceId;
+        private String serviceID;
         @NonNull
         private String billersCode;
         @NonNull
-        private String variationCode;
+        private String variation_code;
         Integer amount;
         @NonNull
-        private Integer phone;
+        private String phone;
 }
