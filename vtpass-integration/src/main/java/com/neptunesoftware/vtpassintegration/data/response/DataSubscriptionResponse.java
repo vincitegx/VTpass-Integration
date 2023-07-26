@@ -3,7 +3,6 @@ package com.neptunesoftware.vtpassintegration.data.response;
 import lombok.NonNull;
 
 public record DataSubscriptionResponse(
-        @NonNull
         String code,
         Content content,
         String response_description,
