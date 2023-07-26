@@ -6,13 +6,13 @@ import lombok.Data;
 @Data
 public class TvSubscriptionStatusResponse {
     private String code;
-    private TvContentResponse content;
+    private TvContent content;
     @JsonProperty("response_description")
     private String responseDescription;
     private String requestId;
     private String amount;
     @JsonProperty("transaction_date")
-    private TransactionDate transactionDate;
+    private TvTransactionDate transactionDate;
     @JsonProperty("purchased_code")
     private String purchasedCode;
 }
