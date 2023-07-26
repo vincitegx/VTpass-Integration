@@ -17,7 +17,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class DataController {
 
-    private DataSubscriptionService dataSubscriptionService;
+    private final DataSubscriptionService dataSubscriptionService;
     @PostMapping
     public ResponseEntity<?> handleDataSubscription(@RequestBody DataSubscriptionRequest dataSubscriptionRequest) {
         return ResponseEntity.ok(dataSubscriptionService.subscribeForData(dataSubscriptionRequest));
