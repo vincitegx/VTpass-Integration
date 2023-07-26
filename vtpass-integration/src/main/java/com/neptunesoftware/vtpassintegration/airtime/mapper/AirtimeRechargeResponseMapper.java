@@ -13,7 +13,7 @@ import java.util.function.Function;
 @Component
 @AllArgsConstructor
 public class AirtimeRechargeResponseMapper {
-//    private final Credentials credentials;
+    private final Credentials credentials;
     public TransactionRequest apply(AirtimeResponse airtimeResponse, AirtimeRequest airtimeRequest) {
 //        TransactionRequest transactionRequest = new TransactionRequest(
 //                airtimeResponse.getCode(),
@@ -22,14 +22,26 @@ public class AirtimeRechargeResponseMapper {
 //                airtimeResponse.getTransactionId(),
 //                airtimeResponse.getAmount()
 //        );
-                return TransactionRequest.builder()
-                        .requestId(airtimeResponse.getRequestId())
-                        .tranId(airtimeResponse.getTransactionId())
-                        .tranAppl("")
-                        .tranSender("")
-                        .tranAmount(airtimeResponse.getAmount())
-                        .tranReceiver(airtimeRequest.getPhone())
-                        .tranDate(airtimeResponse.getTransaction_date().toString())
+    return     TransactionRequest.builder()
+                .requestId(airtimeResponse.getRequestId())
+                .channelName(null)
+                .chargeAmount(null)
+                .tranSender("E")
+                .tranReceiver(null)
+                .isReversal("N")
+                .narration(null)
+                .paymentCurr(null)
+                .serviceId("E")
+                .taxAmount(null)
+                .tranStatus(null)
+                .tranType(null)
+                .tranAmount(airtimeResponse.getAmount())
+                .tranId(airtimeResponse.getRequestId())
+                .tranAppl("E")
+                .tranMethod(null)
+                .tranPurpose(null)
+                .tranDate(Date.from(Instant.now()).toString())
+                .build();
 
 //                        .tranAmount(airtimeResponse.getAmount())
 //                        .tranDate(Date.from(Instant.now()).toString())
@@ -49,6 +61,6 @@ public class AirtimeRechargeResponseMapper {
 //                        .tranMethod(null)
 //                        .tranPurpose(null)
 //                        .tranDate(Date.from(Instant.now()).toString())
-                        .build();
+      //                  .build();
     }
 }

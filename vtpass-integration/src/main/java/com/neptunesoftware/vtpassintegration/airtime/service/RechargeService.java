@@ -30,24 +30,27 @@ public class RechargeService {
 
 
     public AirtimeResponse buyAirtime(AirtimeRequest airtimeRequest){
-        MultiValueMap<String, String> airtimePayload = new LinkedMultiValueMap<>();
-        airtimePayload.add("request_id", requestIdGenerator.apply(4));
-        airtimePayload.add("serviceID", airtimeRequest.getServiceID());
-        airtimePayload.add("amount",airtimeRequest.getAmount().toString());
-        airtimePayload.add("phone", airtimeRequest.getPhone());
+       airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
+//        MultiValueMap<String, String> airtimePayload = new LinkedMultiValueMap<>();
+//        airtimePayload.add("request_id", requestIdGenerator.apply(4));
+//        airtimePayload.add("serviceID", airtimeRequest.getServiceID());
+//        airtimePayload.add("amount",airtimeRequest.getAmount().toString());
+//        airtimePayload.add("phone", airtimeRequest.getPhone());
         //airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
 
         AirtimeResponse airtimeResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
                 .header("api-key","0cbaed4fcee1f9ab06344119b70cfd8c")
                 .header("secret-key","SK_420b2619ddf6a8c0c6e1c6556f391ced33901a31d0d")
-                .bodyValue(airtimePayload)
+                .bodyValue(airtimeRequest)
                 .retrieve()
                 .bodyToMono(AirtimeResponse.class)
                 .block();
         log.info("Response: {}",airtimeResponse.getResponse_description());
+        log.info("TransactionId: {}",airtimeResponse.getTransactionId());
      TransactionRequest transactionRequest = airtimeRechargeResponseMapper.apply(airtimeResponse,airtimeRequest);
        log.info("Mapper: {}",transactionRequest);
+
 //        int transactionResponse = transactionService.saveTransaction(transactionRequest);
 //        return transactionResponse;
        return airtimeResponse;
