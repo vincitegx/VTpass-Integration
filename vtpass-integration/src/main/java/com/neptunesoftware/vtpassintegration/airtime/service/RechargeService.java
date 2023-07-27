@@ -40,8 +40,8 @@ public class RechargeService {
 
         AirtimeResponse airtimeResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
-                .header("api-key","0cbaed4fcee1f9ab06344119b70cfd8c")
-                .header("secret-key","SK_420b2619ddf6a8c0c6e1c6556f391ced33901a31d0d")
+                .header("api-key", credentials.getApiKey())
+                .header("secret-key", credentials.getSecretKey())
                 .bodyValue(airtimeRequest)
                 .retrieve()
                 .bodyToMono(AirtimeResponse.class)
@@ -56,4 +56,5 @@ public class RechargeService {
        return airtimeResponse;
 
     }
-}
+    }
+
