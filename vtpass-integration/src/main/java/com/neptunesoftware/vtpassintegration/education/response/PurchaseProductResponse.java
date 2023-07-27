@@ -5,7 +5,6 @@ import org.springframework.transaction.TransactionStatus;
 
 import java.util.List;
 
-
 public record PurchaseProductResponse(
         String code,
         String responseDescription,

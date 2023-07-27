@@ -8,13 +8,49 @@ import com.neptunesoftware.vtpassintegration.education.mapper.ResultCheckerRespo
 import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
 import com.neptunesoftware.vtpassintegration.education.request.WAECResultCheckerRequest;
 import com.neptunesoftware.vtpassintegration.education.response.ProductRegResponse;
+import com.neptunesoftware.vtpassintegration.education.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.education.response.WAECResultCheckerResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
-import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
+
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+@Service
+@RequiredArgsConstructor
+public class WAECResultCheckerService {
+
+    private final Credentials credentials;
+    private final WebClient.Builder webClientBuilder;
+    private final TransactionService transactionService;
+    private final ResultCheckerResponseMapper resultCheckerResponseMapper;
+    private final RequestIdGenerator requestIdGenerator;
+
+    public Integer purchaseWAECResultChecker(WAECResultCheckerRequest request) {
+        request.setRequest_id(requestIdGenerator.apply(4));
+        String serviceId = "waec"; // Replace with the actual service ID for WAEC result checker
+        String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC result checker
+
+        // Perform the HTTP POST request to the VTpass API
+        WAECResultCheckerResponse waecResultCheckerResponse = webClientBuilder.build().post()
+                .uri(apiUrl)
+                .header("api-key", credentials.getApiKey())
+                .header("secret-key", credentials.getSecretKey())
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(WAECResultCheckerResponse.class)
+                .block();
+
+        // Map the VTpass response to the custom WAECResultCheckerResponse
+        TransactionRequest transactionRequest = resultCheckerResponseMapper.mapCheckerRequest(request, waecResultCheckerResponse);
+        Integer transactionResponse = transactionService.saveTransaction(transactionRequest);
+
+        return transactionResponse;
+    }
+
+
+}
 
 //@Service
 //@RequiredArgsConstructor
@@ -48,38 +84,3 @@ import org.springframework.web.reactive.function.client.WebClient;
 //        return transactionResponse;
 //    }
 //}
-
-@Service
-@RequiredArgsConstructor
-public class WAECResultCheckerService {
-
-    private final Credentials credentials;
-    private final WebClient.Builder webClientBuilder;
-    private final TransactionService transactionService;
-    private final ResultCheckerResponseMapper resultCheckerResponseMapper;
-    private final RequestIdGenerator requestIdGenerator;
-
-    public TransactionResponse purchaseWAECResultChecker(WAECResultCheckerRequest request) {
-        request.setRequest_id(requestIdGenerator.apply(4));
-        String serviceId = "waec"; // Replace with the actual service ID for WAEC result checker
-        String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC result checker
-
-        // Perform the HTTP POST request to the VTpass API
-        WAECResultCheckerResponse waecResultCheckerResponse = webClientBuilder.build().post()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(WAECResultCheckerResponse.class)
-                .block();
-
-        // Map the VTpass response to the custom WAECResultCheckerResponse
-        TransactionRequest transactionRequest = resultCheckerResponseMapper.mapCheckerRequest(request, waecResultCheckerResponse);
-        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
-
-        return transactionResponse;
-    }
-
-
-}

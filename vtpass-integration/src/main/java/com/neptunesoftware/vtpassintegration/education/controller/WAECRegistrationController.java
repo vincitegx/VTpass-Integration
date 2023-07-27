@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/v1/waec-registration")
+@RequestMapping("api/v1/education")
 @RequiredArgsConstructor
 public class WAECRegistrationController {
 
-    private WAECRegistrationService waecRegistrationService;
+    private final WAECRegistrationService waecRegistrationService;
 
-    @PostMapping("/purchase")
+    @PostMapping("waec")
     public ResponseEntity<?> purchaseWAECRegistration(@RequestBody ProductRegRequest request) {
         return ResponseEntity.ok(waecRegistrationService.purchaseWAECRegistration(request));
     }

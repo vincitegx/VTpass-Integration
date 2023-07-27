@@ -9,31 +9,37 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Component
 @RequiredArgsConstructor
 public class EducationPaymentResponseMapper {
 
     private final Credentials credentials;
 
-    public TransactionRequest mapRequest(ProductRegRequest request, ProductRegResponse waecRegResponse) {
+    public TransactionRequest mapRequest(ProductRegRequest request, ProductRegResponse response) {
 
         return TransactionRequest.builder()
-                .requestId(request.getRequest_id())
-                .serviceId(request.getServiceID())
-                .tranAmount(waecRegResponse.getAmount())
-                //variation_code
-                .tranAmount(waecRegResponse.getAmount().toString())
-                // quantity
-                .tranReceiver(request.getPhone())
-
-                //////////////////////////////////////////////////////////////////
-                .tranType(waecRegResponse.getContent().getTransaction().getType())
-                .tranId(waecRegResponse.getContent().getTransaction().getTransactionId())
-                .tranAppl(waecRegResponse.getContent().getTransaction().getPlatform())
-                .tranMethod(waecRegResponse.getContent().getTransaction().getMethod())
+                .requestId(response.getRequestId())
                 .channelName(credentials.getChannelName())
+                .chargeAmount(response.getContent().getTransactions().getCommission().toString())
+                .tranSender(response.getContent().getTransactions().getEmail())
+                .tranReceiver(response.getContent().getTransactions().getPhone())
+                .isReversal("N")
+                .narration(response.getContent().getTransactions().getProduct_name())
+                .paymentCurr(credentials.getPaymentCurrency())
+                .serviceId(request.getServiceID())
+                .taxAmount(null)
+                .tranStatus(response.getContent().getTransactions().getStatus())
+                .tranType(response.getContent().getTransactions().getType())
+                .tranAmount(response.getContent().getTransactions().getAmount().toString())
+                .tranId(response.getContent().getTransactions().getTransactionId())
+                .tranAppl(response.getContent().getTransactions().getPlatform())
+                .tranMethod(response.getContent().getTransactions().getMethod())
+                .tranPurpose(response.getContent().getTransactions().getProduct_name())
+                .tranDate(Date.from(Instant.now()).toString())
 
                 .build();
     }
-
 }

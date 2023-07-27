@@ -9,7 +9,5 @@ public class Variation {
     private String name;
     private String variation_amount;
     private String fixedPrice;
-    // Add any additional fields as needed
-
 
 }

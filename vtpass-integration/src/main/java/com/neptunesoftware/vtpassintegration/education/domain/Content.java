@@ -7,6 +7,6 @@ import java.util.List;
 @Data
 public class Content {
 
-    private Transaction transaction;
+    private Transaction transactions;
 
 }

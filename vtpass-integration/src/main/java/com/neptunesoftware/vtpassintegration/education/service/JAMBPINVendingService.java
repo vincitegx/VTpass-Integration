@@ -23,7 +23,7 @@ public class JAMBPINVendingService {
     private final JambPinVendingResponseMapper responseMapper;
     private final RequestIdGenerator requestIdGenerator;
 
-    public TransactionResponse purchaseJAMBPINVending(JAMBPINVendingRequest request) {
+    public Integer purchaseJAMBPINVending(JAMBPINVendingRequest request) {
         request.setRequest_id(requestIdGenerator.apply(4));
         String serviceId = "jamb"; // Replace with the actual service ID for JAMB PIN vending
         String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing JAMB PIN vending
@@ -40,7 +40,7 @@ public class JAMBPINVendingService {
 
         // Map the VTpass response to the custom JAMBPINVendingResponse
         TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, jambPINVendingResponse);
-        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
+        Integer transactionResponse = transactionService.saveTransaction(transactionRequest);
 
         return transactionResponse;
     }
