@@ -25,8 +25,7 @@ public class JAMBPINVendingService {
     private final RequestIdGenerator requestIdGenerator;
 
     public JAMBProfileVerificationResponse verifyJAMBProfile(JAMBProfileVerificationRequest request) {
-        request.setServiceID("jamb");
-        String apiUrl = "https://api-service.vtpass.com/api/merchant-verify";
+        String apiUrl = "https://sandbox.vtpass.com/api/merchant-verify";
 
         JAMBProfileVerificationResponse verificationResponse = webClientBuilder.build().post()
                 .uri(apiUrl)

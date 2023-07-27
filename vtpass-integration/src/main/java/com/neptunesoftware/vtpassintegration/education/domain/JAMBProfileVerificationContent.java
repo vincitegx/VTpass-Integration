@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class JAMBProfileVerificationContent {
 
-    private String customer_Name;
+    private String Customer_Name;
 }
