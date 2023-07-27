@@ -1,8 +1,17 @@
 package com.neptunesoftware.vtpassintegration.airtime.request;
 
+import lombok.Data;
+import lombok.NonNull;
+
+@Data
 public class AirtimeRequest {
-    private String request_id ;
+
+
+   private String request_id ;
+    @NonNull
     private String serviceID ;
+    @NonNull
     private Integer amount ;
-    private Integer phone ;
+    @NonNull
+    private String phone ;
 }

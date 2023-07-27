@@ -9,3 +9,9 @@ Yvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/tv/TvSer
 bvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/config/WebClientConfig.java,8\4\84c429b4bb5076d6919c98822ce461c8db8f9420
 ž
 nvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/commons/service/RequestIdGenerator.java,f\2\f2cf9a6c22232a3b8f830144922cd13bdd89b348
+Ž
+^vtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/config/Credentials.java,e\c\ec1039115ced821b50bf221380eec22db97e166c
+¨
+xvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/repository/TransactionRepository.java,7\3\73271cc98a17fcd2b0695117be68a43978c539ba
+¢
+rvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/service/TransactionService.java,f\5\f5073622d131d322f8a0804608f823348f653dac

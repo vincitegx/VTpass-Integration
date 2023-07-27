@@ -1,7 +1,7 @@
-package com.neptunesoftware.vtpassintegration.data.response;
+package com.neptunesoftware.vtpassintegration.transaction.response;
 
-public record Transaction(
-        String status,
+public record Transactions(
+        String status ,
         String product_name,
         String unique_element,
         Integer unit_price,
@@ -20,6 +20,5 @@ public record Transaction(
         String platform,
         String method,
         String transactionId
-
 ) {
 }
