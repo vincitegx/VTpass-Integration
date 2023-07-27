@@ -2,11 +2,13 @@ package com.neptunesoftware.vtpassintegration.data.service;
 
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
+import com.neptunesoftware.vtpassintegration.data.exception.VerificationException;
 import com.neptunesoftware.vtpassintegration.data.mapper.DataSubscriptionResponseMapper;
 import com.neptunesoftware.vtpassintegration.data.request.DataSubscriptionRequest;
+import com.neptunesoftware.vtpassintegration.data.request.SmileVerificationRequest;
 import com.neptunesoftware.vtpassintegration.data.response.DataSubscriptionResponse;
+import com.neptunesoftware.vtpassintegration.data.response.SmileVerificationResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
-import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,17 @@ public class DataSubscriptionService {
     private final TransactionService transactionService;
     private final DataSubscriptionResponseMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
+    private final SmileVerificationService smileVerificationService;
 
     public int subscribeForData(DataSubscriptionRequest dataSubscriptionRequest){
+        if(dataSubscriptionRequest.getServiceID() == "smile-direct"){
+            SmileVerificationResponse smileVerificationResponse =
+                    smileVerificationService.verifySmileEmail(new SmileVerificationRequest(dataSubscriptionRequest.getBillersCode(), dataSubscriptionRequest.getServiceID()));
+            if(smileVerificationResponse.content().Customer_Name() == null){
+                throw new VerificationException("Invalid Billers Code !!!");
+            }
+        }
         dataSubscriptionRequest.setRequest_id(requestIdGenerator.apply(4));
-        System.out.println(dataSubscriptionRequest.getRequest_id());
         DataSubscriptionResponse dataSubscriptionResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
                 .header("api-key", credentials.getApiKey())
