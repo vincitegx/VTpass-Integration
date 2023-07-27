@@ -1,5 +1,6 @@
 package com.neptunesoftware.vtpassintegration.education.response;
 
+import com.neptunesoftware.vtpassintegration.education.domain.Transaction;
 import com.neptunesoftware.vtpassintegration.education.domain.TransactionDate;
 import lombok.Data;
 
