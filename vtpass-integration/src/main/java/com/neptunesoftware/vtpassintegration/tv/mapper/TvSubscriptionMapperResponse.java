@@ -7,6 +7,9 @@ import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionStatusRes
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Component
 @RequiredArgsConstructor
 public class TvSubscriptionMapperResponse {
@@ -20,13 +23,13 @@ public class TvSubscriptionMapperResponse {
                 .tranSender(tvResponse.getContent().getTransactions().getUniqueElement())
                 .chargeAmount(String.valueOf(tvResponse.getContent().getTransactions().getCommission()))
                 .tranReceiver(tvResponse.getContent().getTransactions().getPhone())
-                .tranStatus(tvResponse.getAmount())
+                .tranStatus(tvResponse.getContent().getTransactions().getStatus())
                 .tranMethod(tvResponse.getContent().getTransactions().getMethod())
                 .narration(tvResponse.getContent().getTransactions().getProductName())
                 .tranPurpose("Tv subscription")
                 .channelName(credentials.getChannelName())
                 .isReversal("N")
-                .tranDate(tvResponse.getTransactionDate().getDate())
+                .tranDate(Date.from(Instant.now()).toString())
                 .tranType(tvResponse.getContent().getTransactions().getType())
                 .paymentCurr(credentials.getPaymentCurrency())
                 .chargeAmount(String.valueOf(tvResponse.getContent().getTransactions().getTotalAmount()))
