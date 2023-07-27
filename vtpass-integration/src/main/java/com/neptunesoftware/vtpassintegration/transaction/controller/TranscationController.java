@@ -14,6 +14,5 @@ public class TranscationController {
     public ResponseEntity<?> queryTransaction(@RequestParam String requestId){
         System.out.println("entered controller method");
         return ResponseEntity.ok(transactionService.queryTransaction(requestId));
-
     }
 }
