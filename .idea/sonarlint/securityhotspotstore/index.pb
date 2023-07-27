@@ -15,5 +15,3 @@ nvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/commons/
 xvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/repository/TransactionRepository.java,7\3\73271cc98a17fcd2b0695117be68a43978c539ba
 ¢
 rvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/service/TransactionService.java,f\5\f5073622d131d322f8a0804608f823348f653dac
-¨
-xvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/mapper/TransactionResponseMapper.java,1\e\1e1548d25418b616a7180a38feac81455f9d3782
