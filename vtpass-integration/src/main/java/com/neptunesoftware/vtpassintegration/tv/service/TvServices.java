@@ -1,5 +1,6 @@
 package com.neptunesoftware.vtpassintegration.tv.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
@@ -36,8 +37,8 @@ private final WebClient.Builder webClient;
 
       SmartCardVerificationApiResponse response = webClient.build().post()
                 .uri(VT_PASS_BASE_URL+"/merchant-verify") 
-                .header("api-key","0cbaed4fcee1f9ab06344119b70cfd8c")
-                .header("secret-key","SK_420b2619ddf6a8c0c6e1c6556f391ced33901a31d0d")
+                .header("api-key","0a20145c6e0706bf1afd3d4765db8905")
+                .header("secret-key","SK_21598ae28ff25e053e011b9ea6a5088565d870b5c55")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(bodyValues))
                 .retrieve()
@@ -80,8 +81,8 @@ private final WebClient.Builder webClient;
 
         TvSubscriptionStatusResponse response = webClient.build().post()
                 .uri(VT_PASS_BASE_URL+"/pay") // Replace with your actual URL
-                .header("api-key","0cbaed4fcee1f9ab06344119b70cfd8c")
-                .header("secret-key","SK_420b2619ddf6a8c0c6e1c6556f391ced33901a31d0d")
+                .header("api-key","0a20145c6e0706bf1afd3d4765db8905")
+                .header("secret-key","SK_21598ae28ff25e053e011b9ea6a5088565d870b5c55")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(requestDataForTvSubscription))
                 .retrieve()
@@ -104,8 +105,8 @@ private final WebClient.Builder webClient;
         queryPayload.add("request_id", request.getRequest_id() );
         TvSubscriptionStatusResponse response = webClient.build().post()
                 .uri(VT_PASS_BASE_URL+"/requery") // Replace with your actual URL
-                .header("api-key","0cbaed4fcee1f9ab06344119b70cfd8c")
-                .header("secret-key","SK_420b2619ddf6a8c0c6e1c6556f391ced33901a31d0d")
+                .header("api-key","0a20145c6e0706bf1afd3d4765db8905")
+                .header("secret-key","SK_21598ae28ff25e053e011b9ea6a5088565d870b5c55")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(queryPayload))
                 .retrieve()
@@ -119,38 +120,38 @@ private final WebClient.Builder webClient;
                 .request_id(response.getRequestId()).build();
     }
 
-    public TvVariationFromApi tvVariations() {
-        String baseUrl = "https://sandbox.vtpass.com/api/service-variations";
-        String serviceID = "gotv";
+    public TvVariationResponse tvVariations(String serviceID) {
 
-        TvVariationFromApi response = webClient.build().get().uri(baseUrl + "?serviceID={serviceID}", serviceID)
-                .header("api-key", "0cbaed4fcee1f9ab06344119b70cfd8c")
-                .header("public-key", "PK_946b34c1f670666977ecbc7173cb37b8b29ab3daf41")
+        String jsonString = webClient.baseUrl(VT_PASS_BASE_URL+"/service-variations").build()
+                .get().uri( uriBuilder -> uriBuilder.queryParam("serviceID", serviceID).build())
+                .header("api-key", "0a20145c6e0706bf1afd3d4765db8905")
+                .header("public-key", "PK_923798cdb4d63ee6856c613a2eacd5bf6fff2ae2509")
                 .retrieve()
-                .bodyToMono(TvVariationFromApi.class)
+                .bodyToMono(String.class)
                 .block();
+             TvVariationFromApi responseFromApi = deserializeAPIResponse(jsonString);
+             log.info(responseFromApi);
+        assert jsonString != null;
+        log.info("Response: {}", jsonString);
+        assert responseFromApi != null;
+        return mapTvVariationFromApiToResponse(responseFromApi);
+    }
 
-        assert response != null;
-        log.info("Response: {}", response);
-        return response;
+    private static TvVariationFromApi deserializeAPIResponse(String jsonString) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(jsonString, TvVariationFromApi.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static TvVariationResponse mapTvVariationFromApiToResponse(TvVariationFromApi tvVariationFromApi) {
-        TvVariationResponse tvVariationResponse = TvVariationResponse.builder()
+        return TvVariationResponse.builder()
                 .serviceName(tvVariationFromApi.getContent().getServiceName())
                 .convenienceFee(tvVariationFromApi.getContent().getConvinience_fee())
+                .variations(tvVariationFromApi.getContent().getVarations())
                 .build();
-
-        if (tvVariationFromApi.getContent() != null && tvVariationFromApi.getContent().getVariations() != null) {
-            List<TvVariations> variations = tvVariationFromApi.getContent().getVariations();
-
-            for (TvVariations variation : variations) {
-                tvVariationResponse.setVariationCode(variation.getVariation_code());
-                tvVariationResponse.setVariationName(variation.getName());
-                tvVariationResponse.setVariationAmount(variation.getVariation_amount());
-
-            }
-        }
-        return tvVariationResponse;
     }
 }

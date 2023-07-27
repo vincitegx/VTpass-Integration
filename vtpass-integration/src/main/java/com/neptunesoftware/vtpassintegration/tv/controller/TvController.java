@@ -22,9 +22,9 @@ public class TvController {
     public ResponseEntity<SmartCardResponse> verifySmartCardNumber(@RequestBody VerifySmartCardNumberRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(tvServices.verifySmartCardNumber(request));
     }
- @GetMapping("/variation")
-    public ResponseEntity<TvVariationFromApi> tvVariations() {
-        return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvVariations());
+ @GetMapping("/tvVariation")
+    public ResponseEntity<TvVariationResponse> tvVariations(@RequestParam("serviceID") String serviceId) {
+        return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvVariations(serviceId));
     }
 
     @PostMapping("/tv-subscription")
