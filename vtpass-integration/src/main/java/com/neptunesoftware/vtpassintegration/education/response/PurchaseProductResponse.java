@@ -14,7 +14,9 @@ public record PurchaseProductResponse(
         TransactionDate transactionDate,
         String purchasedCode,
         List<String> tokens
-) {}
+) {
+
+}
 
 
 
