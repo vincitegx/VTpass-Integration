@@ -74,7 +74,7 @@ private final WebClient.Builder webClient;
         requestDataForTvSubscription.add("serviceID", request.getServiceID());
         requestDataForTvSubscription.add("billersCode",request.getBillersCode());
         requestDataForTvSubscription.add("variation_code", smartCardVerification.getCurrentBouquetCode());
-        requestDataForTvSubscription.add("amount", request.getAmount());
+        requestDataForTvSubscription.add("amount", String.valueOf(request.getAmount()));
         requestDataForTvSubscription.add("phone", request.getPhone());
         requestDataForTvSubscription.add("subscription_type", request.getSubscription_type());
         requestDataForTvSubscription.add("quantity",request.getQuantity());

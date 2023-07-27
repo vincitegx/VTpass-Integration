@@ -7,6 +7,7 @@ import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.config.WebClientConfig;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionQueryResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +24,13 @@ public class RechargeService {
 
     private final WebClient.Builder webClientBuilder ;
     private final Credentials credentials ;
+
+
     private final  TransactionService transactionService ;
     private final AirtimeRechargeResponseMapper airtimeRechargeResponseMapper ;
-
     private final RequestIdGenerator requestIdGenerator;
-
-
-    public AirtimeResponse buyAirtime(AirtimeRequest airtimeRequest){
+    public Integer buyAirtime(AirtimeRequest airtimeRequest){
        airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
-//        MultiValueMap<String, String> airtimePayload = new LinkedMultiValueMap<>();
-//        airtimePayload.add("request_id", requestIdGenerator.apply(4));
-//        airtimePayload.add("serviceID", airtimeRequest.getServiceID());
-//        airtimePayload.add("amount",airtimeRequest.getAmount().toString());
-//        airtimePayload.add("phone", airtimeRequest.getPhone());
-        //airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
-
         AirtimeResponse airtimeResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
                 .header("api-key", credentials.getApiKey())
@@ -50,11 +43,8 @@ public class RechargeService {
         log.info("TransactionId: {}",airtimeResponse.getTransactionId());
      TransactionRequest transactionRequest = airtimeRechargeResponseMapper.apply(airtimeResponse,airtimeRequest);
        log.info("Mapper: {}",transactionRequest);
-
-//        int transactionResponse = transactionService.saveTransaction(transactionRequest);
-//        return transactionResponse;
-       return airtimeResponse;
-
+        int transactionResponse = transactionService.saveTransaction(transactionRequest);
+       return transactionResponse;
     }
     }
 
