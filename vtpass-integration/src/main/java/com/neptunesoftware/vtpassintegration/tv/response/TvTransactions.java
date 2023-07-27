@@ -26,7 +26,7 @@ public class TvTransactions {
     private String name;
     @JsonProperty("convinience_fee")
     private int convenienceFee;
-    private int amount;
+    private String amount;
     private String platform;
     private String method;
     @JsonProperty("transactionId")
