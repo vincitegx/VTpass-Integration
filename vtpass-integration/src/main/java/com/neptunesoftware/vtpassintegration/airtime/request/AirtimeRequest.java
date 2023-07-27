@@ -6,12 +6,11 @@ import lombok.NonNull;
 @Data
 public class AirtimeRequest {
 
-
-   private String request_id ;
+   private String request_id;
     @NonNull
-    private String serviceID ;
+    private String serviceID;
     @NonNull
-    private Integer amount ;
+    private Integer amount;
     @NonNull
-    private String phone ;
+    private String phone;
 }
