@@ -23,16 +23,3 @@ public record PurchaseProductResponse(
 
 
 
-//public class PurchaseProductResponse {
-//
-//    private String code;
-//    private String responseDescription;
-//    private String requestId;
-//    private String amount;
-//    private TransactionDate transactionDate;
-//    private String purchasedCode;
-//    private List<String> tokens;
-//
-//
-//   // private String[] tokens;
-//}

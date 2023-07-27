@@ -53,14 +53,4 @@ public class WAECRegistrationService {
     }
 
 
-    public List<WAECVariation> getVariationCodes() {
-        // Implement the logic to call the API and return the list of WAECVariation
-        return null;
-    }
-
-    public PurchaseProductResponse purchaseProduct(PurchaseProductRequest request) {
-        // Implement the logic to call the API and return the PurchaseProductResponse
-        return null;
-    }
-
 }
