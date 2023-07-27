@@ -2,9 +2,9 @@ package com.neptunesoftware.vtpassintegration.education.mapper;
 
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.education.request.JAMBPINVendingRequest;
-import com.neptunesoftware.vtpassintegration.education.request.WAECResultCheckerRequest;
+import com.neptunesoftware.vtpassintegration.education.request.JAMBProductPurchaseRequest;
 import com.neptunesoftware.vtpassintegration.education.response.JAMBPINVendingResponse;
-import com.neptunesoftware.vtpassintegration.education.response.WAECResultCheckerResponse;
+import com.neptunesoftware.vtpassintegration.education.response.JAMBProductPurchaseResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,12 +14,12 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class JambPinVendingResponseMapper {
+public class JambProductPurchaseResponseMapper {
 
 
     private final Credentials credentials;
 
-    public TransactionRequest mapPinVendingRequest(JAMBPINVendingRequest request, JAMBPINVendingResponse response) {
+    public TransactionRequest mapPinVendingRequest(JAMBProductPurchaseRequest request, JAMBProductPurchaseResponse response) {
         return TransactionRequest.builder()
                 .requestId(response.getRequestId())
                 .channelName(credentials.getChannelName())
