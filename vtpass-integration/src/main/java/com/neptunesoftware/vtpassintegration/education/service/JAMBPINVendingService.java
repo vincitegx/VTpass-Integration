@@ -40,8 +40,8 @@ public class JAMBPINVendingService {
     }
 
     public JAMBProductPurchaseResponse purchaseJAMBProduct(JAMBProductPurchaseRequest request) {
-        request.setServiceID("jamb");
-        String apiUrl = "https://api-service.vtpass.com/api/pay";
+//        request.setServiceID("jamb");
+        String apiUrl = "https://sandbox.vtpass.com/api/pay";
 
         JAMBProductPurchaseResponse purchaseResponse = webClientBuilder.build().post()
                 .uri(apiUrl)
