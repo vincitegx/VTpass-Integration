@@ -1,9 +1,7 @@
 package com.neptunesoftware.vtpassintegration.education.mapper;
 
 import com.neptunesoftware.vtpassintegration.config.Credentials;
-import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
 import com.neptunesoftware.vtpassintegration.education.request.WAECResultCheckerRequest;
-import com.neptunesoftware.vtpassintegration.education.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.education.response.WAECResultCheckerResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;

@@ -3,15 +3,10 @@ package com.neptunesoftware.vtpassintegration.education.service;
 
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
-import com.neptunesoftware.vtpassintegration.education.mapper.EducationPaymentResponseMapper;
 import com.neptunesoftware.vtpassintegration.education.mapper.ResultCheckerResponseMapper;
-import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
 import com.neptunesoftware.vtpassintegration.education.request.WAECResultCheckerRequest;
-import com.neptunesoftware.vtpassintegration.education.response.ProductRegResponse;
-import com.neptunesoftware.vtpassintegration.education.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.education.response.WAECResultCheckerResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
-
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

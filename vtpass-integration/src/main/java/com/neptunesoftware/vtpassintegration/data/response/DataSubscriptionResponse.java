@@ -1,6 +1,6 @@
 package com.neptunesoftware.vtpassintegration.data.response;
 
-import lombok.NonNull;
+
 
 public record DataSubscriptionResponse(
         String code,
