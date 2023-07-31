@@ -75,8 +75,4 @@ public class TransactionService {
         return transactionRepository.updateTransaction(transactionRequest);
     }
 }
-@Data
-@AllArgsConstructor
-class RequestId{
-    private String request_id;
-}
+
