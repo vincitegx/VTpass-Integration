@@ -4,6 +4,7 @@ import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.repository.TransactionRepository;
 import com.neptunesoftware.vtpassintegration.transaction.request.CallBackRequest;
+import com.neptunesoftware.vtpassintegration.transaction.request.RequestId;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.CallBackResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionQueryResponse;
