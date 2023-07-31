@@ -1,12 +1,9 @@
 package com.neptunesoftware.vtpassintegration.education.domain;
 
-
 import lombok.Data;
 
 @Data
-public class Content {
+public class JAMBProfileVerificationContent {
 
-    private Transaction transactions;
-
+    private String Customer_Name;
 }
-
