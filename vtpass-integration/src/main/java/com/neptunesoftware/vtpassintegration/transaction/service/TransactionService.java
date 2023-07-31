@@ -9,8 +9,6 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.CallBackResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionQueryResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
