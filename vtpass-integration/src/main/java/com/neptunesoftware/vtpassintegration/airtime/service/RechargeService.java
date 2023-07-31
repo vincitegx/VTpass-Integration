@@ -71,7 +71,7 @@ public class RechargeService {
     public IntlProductTypesResponse getIntlAirtimeProducts(){
         try {
             return webClientBuilder.build().get()
-                    .uri("https://sandbox.vtpass.com/api/get-international-airtime-product-types?code=GH")
+                    .uri(credentials.getBaseUrl()+"/get-international-airtime-product-types?code=GH")
                     .header("api-key", credentials.getApiKey())
                     .header("secret-key", credentials.getSecretKey())
                     .retrieve()
