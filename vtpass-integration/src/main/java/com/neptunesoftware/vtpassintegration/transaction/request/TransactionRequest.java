@@ -1,11 +1,14 @@
 package com.neptunesoftware.vtpassintegration.transaction.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 @Data
 @Builder
 public class TransactionRequest{
+        @NonNull
+        private String code;
         @NonNull
         private String requestId;
         @NonNull
