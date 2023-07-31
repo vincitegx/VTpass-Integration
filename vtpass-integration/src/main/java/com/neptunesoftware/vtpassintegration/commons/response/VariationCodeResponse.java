@@ -10,6 +10,7 @@ public record VariationCodeResponse(
             String ServiceName,
             String serviceID,
             String convinience_fee,
+            String currency,
             List<Variations> varations
     ) {
     }
@@ -18,7 +19,12 @@ public record VariationCodeResponse(
             String variation_code,
             String name,
             String variation_amount,
-            String fixedPrice
+            String fixedPrice,
+            Integer variation_amount_min,
+            Integer variation_amount_max,
+            Integer variation_rate,
+            Integer charged_amount,
+            String charged_currency
     ) {
     }
 }

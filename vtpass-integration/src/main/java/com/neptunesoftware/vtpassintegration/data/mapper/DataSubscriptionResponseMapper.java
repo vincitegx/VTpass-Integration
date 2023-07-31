@@ -15,6 +15,7 @@ public class DataSubscriptionResponseMapper {
     private final Credentials credentials;
     public TransactionRequest apply(DataSubscriptionRequest dataSubscriptionRequest, DataSubscriptionResponse dataSubscriptionResponse) {
         return TransactionRequest.builder()
+                .code(dataSubscriptionResponse.code())
                 .requestId(dataSubscriptionResponse.requestId())
                 .channelName(credentials.getChannelName())
                 .chargeAmount(dataSubscriptionResponse.content().transactions().commission().toString())
