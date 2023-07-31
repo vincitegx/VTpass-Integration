@@ -2,8 +2,11 @@ package com.neptunesoftware.vtpassintegration.tv.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
+import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
+import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionResponseApi;
+import com.neptunesoftware.vtpassintegration.tv.domain.TvVariationFromApi;
 import com.neptunesoftware.vtpassintegration.tv.mapper.TvSubscriptionMapperResponse;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionStatusRequest;
@@ -11,14 +14,8 @@ import com.neptunesoftware.vtpassintegration.tv.request.VerifySmartCardNumberReq
 import com.neptunesoftware.vtpassintegration.tv.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,104 +25,75 @@ private final WebClient.Builder webClient;
     private final RequestIdGenerator requestIdGenerator;
     private final TvSubscriptionMapperResponse responseMapper;
     private final TransactionService transactionService;
-
+    private final Credentials credentials;
     private static final String VT_PASS_BASE_URL = "https://sandbox.vtpass.com/api";
-    public SmartCardResponse verifySmartCardNumber(VerifySmartCardNumberRequest request) {
-        MultiValueMap<String, String> bodyValues = new LinkedMultiValueMap<>();
-        bodyValues.add("billersCode", request.getBillersCode());
-        bodyValues.add("serviceID", request.getServiceID());
 
-      SmartCardVerificationApiResponse response = webClient.build().post()
-                .uri(VT_PASS_BASE_URL+"/merchant-verify") 
-                .header("api-key","0a20145c6e0706bf1afd3d4765db8905")
-                .header("secret-key","SK_21598ae28ff25e053e011b9ea6a5088565d870b5c55")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData(bodyValues))
+    public TvSubscriptionResponse tvSubscription(TvSubscriptionRequest  request) {
+        TvSubscriptionResponse subscriptionResponse = new TvSubscriptionResponse();
+        TvSmartCardVerificationResponse verificationApiResponse = verifySmartCardNumber(
+                new VerifySmartCardNumberRequest(request.getBillersCode(),
+                request.getServiceID()));
+        if (verificationApiResponse.getContent().getCustomerName()== null) {
+            throw new RuntimeException("");
+        }
+        request.setRequest_id(requestIdGenerator.apply(4));
+        TvSubscriptionResponseApi response = webClient.build().post()
+                .uri("https://sandbox.vtpass.com/api/pay") 
+                .header("api-key",credentials.getApiKey())
+                .header("secret-key",credentials.getSecretKey())
+                .bodyValue(request)
                 .retrieve()
-                .bodyToMono(SmartCardVerificationApiResponse.class)
+                .bodyToMono(TvSubscriptionResponseApi.class)
                 .block();
-        assert response != null;
-        log.info("Customer name: {}",response.getContent().getCustomerName());
-        log.info("Bouquet: {}", response.getContent().getCurrentBouquet());
-        log.info("The amount due for renewing the current bouquet: {}", "N"+response.getContent().getRenewalAmount());
-        SmartCardResponse vtPassResponse = new SmartCardResponse();
-        vtPassResponse.setCardHolderName(response.getContent().getCustomerName());
-        vtPassResponse.setCurrentBouquet(response.getContent().getCurrentBouquet());
-        vtPassResponse.setAmountDueRenewal(String.valueOf(response.getContent().getRenewalAmount()));
-        vtPassResponse.setStatus(response.getContent().getStatus());
-        vtPassResponse.setCurrentBouquetCode(response.getContent().getCurrentBouquetCode());
-        vtPassResponse.setDueDate(response.getContent().getDueDate());
 
-        return vtPassResponse;
+        assert response != null;
+        subscriptionResponse.setStatus(response.getContent().getTransactions().getStatus());
+        subscriptionResponse.setAmount(response.getAmount());
+        subscriptionResponse.setDescription(response.getResponseDescription());
+        log.info("RequestId {}",response.getRequestId());
+
+        TransactionRequest transactionRequest = responseMapper.mapper(request,response);
+        int dbResponse =  transactionService.saveTransaction(transactionRequest);
+
+        if (dbResponse > 0) {
+            log.info("*****TRANSACTION IS SUCCESSFUL, DATA SAVED TO DATABASE **********");
+        }
+        return subscriptionResponse;
     }
 
-    public TvSubscriptionStatusResponse tvSubscription(TvSubscriptionRequest  request) {
-
-        VerifySmartCardNumberRequest smartCardNumberRequest = new VerifySmartCardNumberRequest();
-        smartCardNumberRequest.setServiceID(request.getServiceID());
-        smartCardNumberRequest.setBillersCode(request.getBillersCode());
-
-        //Response from verify-smart-card
-        SmartCardResponse smartCardVerification = verifySmartCardNumber(smartCardNumberRequest);
-
-        //Payload for making the API call
-        MultiValueMap<String, String> requestDataForTvSubscription = new LinkedMultiValueMap<>();
-        requestDataForTvSubscription.add("request_id",requestIdGenerator.apply(4) );
-        requestDataForTvSubscription.add("serviceID", request.getServiceID());
-        requestDataForTvSubscription.add("billersCode",request.getBillersCode());
-        requestDataForTvSubscription.add("variation_code", smartCardVerification.getCurrentBouquetCode());
-        requestDataForTvSubscription.add("amount", String.valueOf(request.getAmount()));
-        requestDataForTvSubscription.add("phone", request.getPhone());
-        requestDataForTvSubscription.add("subscription_type", request.getSubscription_type());
-        requestDataForTvSubscription.add("quantity",request.getQuantity());
-
-        TvSubscriptionStatusResponse response = webClient.build().post()
-                .uri(VT_PASS_BASE_URL+"/pay") // Replace with your actual URL
-                .header("api-key","0a20145c6e0706bf1afd3d4765db8905")
-                .header("secret-key","SK_21598ae28ff25e053e011b9ea6a5088565d870b5c55")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData(requestDataForTvSubscription))
+    private TvSmartCardVerificationResponse verifySmartCardNumber(VerifySmartCardNumberRequest request) {
+        return webClient.build().post()
+                .uri(VT_PASS_BASE_URL+"/merchant-verify")
+                .header("api-key",credentials.getApiKey())
+                .header("secret-key",credentials.getSecretKey())
+                .bodyValue(request)
                 .retrieve()
-                .bodyToMono(TvSubscriptionStatusResponse.class)
+                .bodyToMono(TvSmartCardVerificationResponse.class)
                 .block();
-        assert response != null;
-          log.info("Response TvSubscription message {}",response.getResponseDescription());
-        TransactionRequest transactionRequest = responseMapper.mapper(request,response);
-
-        int dbResponse =  transactionService.saveTransaction(transactionRequest);
-        if (dbResponse > 0) {
-            log.info("********* SUBSCRIPTION SUCCESSFUL**********");
-            log.info("********* TRANSACTION SAVED TO DATABASE SUCCESSFULLY**********");
-        }
-        return response;
     }
     
-    public TvSubscriptionResponse tvSubscriptionStatus(TvSubscriptionStatusRequest request) {
-        MultiValueMap<String, String> queryPayload = new LinkedMultiValueMap<>();
-        queryPayload.add("request_id", request.getRequest_id() );
-        TvSubscriptionStatusResponse response = webClient.build().post()
+    public TvSubscriptionStatusResponse tvSubscriptionStatus(TvSubscriptionStatusRequest request) {
+        TvSubscriptionResponseApi response = webClient.build().post()
                 .uri(VT_PASS_BASE_URL+"/requery") // Replace with your actual URL
-                .header("api-key","0a20145c6e0706bf1afd3d4765db8905")
-                .header("secret-key","SK_21598ae28ff25e053e011b9ea6a5088565d870b5c55")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData(queryPayload))
+                .header("api-key",credentials.getApiKey())
+                .header("secret-key",credentials.getSecretKey())
+                .bodyValue(request)
                 .retrieve()
-                .bodyToMono(TvSubscriptionStatusResponse.class)
+                .bodyToMono(TvSubscriptionResponseApi.class)
                 .block();
         assert response != null;
-        log.info("Response TvSubscription message {}",response.getResponseDescription());
+        log.info("Response TvSubscription message {}",response);
 
-        return TvSubscriptionResponse.builder()
-                .status(response.getResponseDescription())
-                .request_id(response.getRequestId()).build();
+        return TvSubscriptionStatusResponse.builder()
+                .status(response.getContent().getTransactions().getStatus())
+                .productName(response.getContent().getTransactions().getProductName()).build();
     }
 
-    public TvVariationResponse tvVariations(String serviceID) {
-
+    public TvVariationResponseApi tvVariations(String serviceID) {
         String jsonString = webClient.baseUrl(VT_PASS_BASE_URL+"/service-variations").build()
                 .get().uri( uriBuilder -> uriBuilder.queryParam("serviceID", serviceID).build())
-                .header("api-key", "0a20145c6e0706bf1afd3d4765db8905")
-                .header("public-key", "PK_923798cdb4d63ee6856c613a2eacd5bf6fff2ae2509")
+                .header("api-key", credentials.getApiKey())
+                .header("public-key", credentials.getPublicKey())
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
@@ -147,8 +115,8 @@ private final WebClient.Builder webClient;
         return null;
     }
 
-    private static TvVariationResponse mapTvVariationFromApiToResponse(TvVariationFromApi tvVariationFromApi) {
-        return TvVariationResponse.builder()
+    private static TvVariationResponseApi mapTvVariationFromApiToResponse(TvVariationFromApi tvVariationFromApi) {
+        return TvVariationResponseApi.builder()
                 .serviceName(tvVariationFromApi.getContent().getServiceName())
                 .convenienceFee(tvVariationFromApi.getContent().getConvinience_fee())
                 .variations(tvVariationFromApi.getContent().getVarations())

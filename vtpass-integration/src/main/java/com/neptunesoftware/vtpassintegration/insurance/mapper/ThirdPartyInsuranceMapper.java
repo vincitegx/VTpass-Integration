@@ -1,8 +1,10 @@
-package com.neptunesoftware.vtpassintegration.education.mapper;
+package com.neptunesoftware.vtpassintegration.insurance.mapper;
 
 import com.neptunesoftware.vtpassintegration.config.Credentials;
-import com.neptunesoftware.vtpassintegration.education.request.JAMBPINVendingRequest;
-import com.neptunesoftware.vtpassintegration.education.response.JAMBPINVendingResponse;
+import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
+import com.neptunesoftware.vtpassintegration.education.response.ProductRegResponse;
+import com.neptunesoftware.vtpassintegration.insurance.request.ThirdPartyInsuranceRequest;
+import com.neptunesoftware.vtpassintegration.insurance.response.ThirdPartyInsuranceResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,12 +14,12 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class JambPinVendingResponseMapper {
-
+public class ThirdPartyInsuranceMapper {
 
     private final Credentials credentials;
 
-    public TransactionRequest mapPinVendingRequest(JAMBPINVendingRequest request, JAMBPINVendingResponse response) {
+    public TransactionRequest mapRequest(ThirdPartyInsuranceRequest request, ThirdPartyInsuranceResponse response) {
+
         return TransactionRequest.builder()
                 .requestId(response.getRequestId())
                 .channelName(credentials.getChannelName())
@@ -37,6 +39,7 @@ public class JambPinVendingResponseMapper {
                 .tranMethod(response.getContent().getTransactions().getMethod())
                 .tranPurpose(response.getContent().getTransactions().getProduct_name())
                 .tranDate(Date.from(Instant.now()).toString())
+
                 .build();
     }
 }

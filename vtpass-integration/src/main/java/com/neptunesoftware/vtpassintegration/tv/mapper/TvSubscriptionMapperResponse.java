@@ -3,7 +3,7 @@ package com.neptunesoftware.vtpassintegration.tv.mapper;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
-import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionStatusResponse;
+import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionResponseApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TvSubscriptionMapperResponse {
     private final Credentials credentials;
-    public TransactionRequest  mapper( TvSubscriptionRequest tvRequest, TvSubscriptionStatusResponse tvResponse) {
+    public TransactionRequest  mapper( TvSubscriptionRequest tvRequest, TvSubscriptionResponseApi tvResponse) {
         return TransactionRequest.builder()
                 .requestId(tvResponse.getRequestId())
                 .serviceId(tvRequest.getServiceID())
