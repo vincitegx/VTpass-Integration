@@ -46,7 +46,7 @@ public class DataSubscriptionService {
             TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
             return transactionService.saveTransaction(transactionRequest);
         }else{
-            throw new TransactionException(dataSubscriptionResponse.response_description(), dataSubscriptionResponse.code(), dataSubscriptionResponse.requestId());
+            throw new TransactionException(dataSubscriptionResponse.response_description(), dataSubscriptionResponse.code(), dataSubscriptionRequest.getRequest_id());
         }
     }
 }
