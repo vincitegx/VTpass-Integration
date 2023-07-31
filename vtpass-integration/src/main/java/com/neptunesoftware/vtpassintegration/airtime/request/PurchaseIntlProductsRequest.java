@@ -12,7 +12,7 @@ public class PurchaseIntlProductsRequest {
     @NonNull
     String variation_code;
     @NonNull
-    Integer amount;
+    String amount;
     String phone;
     @NonNull
     String operator_id;
