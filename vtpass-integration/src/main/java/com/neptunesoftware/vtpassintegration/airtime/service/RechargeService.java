@@ -1,6 +1,7 @@
 package com.neptunesoftware.vtpassintegration.airtime.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neptunesoftware.vtpassintegration.airtime.mapper.AirtimeRechargeResponseMapper;
 import com.neptunesoftware.vtpassintegration.airtime.request.AirtimeRequest;
 import com.neptunesoftware.vtpassintegration.airtime.request.PurchaseIntlProductsRequest;
@@ -88,6 +89,7 @@ public class RechargeService {
     }
 
     public int purchaseIntlProduct(PurchaseIntlProductsRequest purchaseIntlProductsRequest){
+
         purchaseIntlProductsRequest.setRequest_id(requestIdGenerator.apply(7));
             PurchaseIntlProductsResponse purchaseIntlProductsResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
@@ -97,8 +99,11 @@ public class RechargeService {
                 .retrieve()
                 .bodyToMono(PurchaseIntlProductsResponse.class)
                 .block();
+        assert purchaseIntlProductsResponse != null;
+        log.info(purchaseIntlProductsResponse);
         TransactionRequest transactionRequest = airtimeRechargeResponseMapper.applyMap(purchaseIntlProductsResponse,purchaseIntlProductsRequest);
-        int transactionResponse = transactionService.saveTransaction(transactionRequest);
+      log.info(transactionRequest);
+       int transactionResponse = transactionService.saveTransaction(transactionRequest);
         return transactionResponse;
     }
 
