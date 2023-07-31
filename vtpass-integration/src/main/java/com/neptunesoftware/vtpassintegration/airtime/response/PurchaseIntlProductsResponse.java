@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NonNull;
 
 public record PurchaseIntlProductsResponse(
-       String code,
-      Content  content,
-       String response_description,
-      String  requestId,
-      String  amount,
-       TransactionDate transaction_date,
-       String purchased_code
+String code,
+Content content,
+String response_description,
+String requestId,
+String amount,
+TransactionDate transaction_date,
+String purchased_code
 ) {
-  public record Content(Transactions transactions){ }
+
+
+public record Content(Transactions transactions){ }
+
 
 
  public record Transactions(
