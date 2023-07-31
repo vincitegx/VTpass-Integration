@@ -1,18 +1,11 @@
 package com.neptunesoftware.vtpassintegration.tv.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class TvSubscriptionStatusResponse {
-    private String code;
-    private TvContent content;
-    @JsonProperty("response_description")
-    private String responseDescription;
-    private String requestId;
-    private String amount;
-    @JsonProperty("transaction_date")
-    private TvTransactionDate transactionDate;
-    @JsonProperty("purchased_code")
-    private String purchasedCode;
+    private  String status;
+    private  String productName;
 }
