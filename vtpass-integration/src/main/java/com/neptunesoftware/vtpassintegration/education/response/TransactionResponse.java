@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class TransactionResponse {
-
     private String code;
     private Transaction transactions;
     private String response_description;

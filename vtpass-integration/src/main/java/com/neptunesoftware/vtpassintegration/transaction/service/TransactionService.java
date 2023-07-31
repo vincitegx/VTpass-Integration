@@ -2,6 +2,7 @@ package com.neptunesoftware.vtpassintegration.transaction.service;
 
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.repository.TransactionRepository;
+import com.neptunesoftware.vtpassintegration.transaction.request.RequestId;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionQueryResponse;
 import lombok.AllArgsConstructor;
@@ -34,8 +35,4 @@ public class TransactionService {
                 .block();
     }
 }
-@Data
-@AllArgsConstructor
-class RequestId{
-    private String request_id;
-}
+
