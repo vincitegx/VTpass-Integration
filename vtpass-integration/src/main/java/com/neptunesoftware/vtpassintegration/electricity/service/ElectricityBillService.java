@@ -9,6 +9,8 @@ import com.neptunesoftware.vtpassintegration.electricity.mapper.ElectricityMappe
 import com.neptunesoftware.vtpassintegration.electricity.request.ElectricBillRequest;
 import com.neptunesoftware.vtpassintegration.electricity.request.VerifyMeterNumberRequest;
 import com.neptunesoftware.vtpassintegration.electricity.response.*;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
+import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class ElectricityBillService {
     private final WebClient.Builder webClient;
     private final RequestIdGenerator requestIdGenerator;
         private final ElectricityMapper responseMapper;
-//    private final TransactionService transactionService;
+    private final TransactionService transactionService;
     private final Credentials credentials;
 
     private VerifyMeterNumberResponse verifyMeterNumber(VerifyMeterNumberRequest request) {
@@ -37,12 +39,12 @@ public class ElectricityBillService {
                 .block();
     }
 
-    public ElectricBillResponse electricityPayment(ElectricBillRequest request) {
+    public TransactionResponse electricityPayment(ElectricBillRequest request) {
         ElectricPostpaidResponse postpaidResponse;
         ElectricPrepaidResponse prepaidResponse;
+        TransactionResponse response = null;
 
         ElectricBillResponseApi electricBillResponse;
-        ElectricBillGenericResponse<ElectricPostpaidResponse> genericPrepaidResponse;
         VerifyMeterNumberResponse verifyMeterNumberResponse = verifyMeterNumber
                 (new VerifyMeterNumberRequest(request.getBillersCode(),
                         request.getServiceID(), request.getVariation_code()));
@@ -62,17 +64,27 @@ public class ElectricityBillService {
             postpaidResponse = deserializeAPIResponsePostPaid(jsonString);
             log.info(postpaidResponse);
             electricBillResponse = mapToPostPaidResponse(postpaidResponse);
-
-
+            log.info("PostPaid Response: {}",electricBillResponse);
+            if(!Objects.equals(electricBillResponse.getElectricPostpaidResponse().getCode(), "000"))  {
+                throw new ElectricBillPaymentException("");
+            }
+            response = transactionService.saveTransaction(responseMapper.mapperToDB(
+                    responseMapper.mapToPostPaidResponse(request,electricBillResponse)));
+            log.info(response);
         }
         if (Objects.equals(request.getVariation_code(), "prepaid")) {
             prepaidResponse = deserializeAPIResponsePrepaid(jsonString);
-            log.info(prepaidResponse);
+            log.info("Prepaid Response: {}",prepaidResponse);
+            if (!Objects.equals(prepaidResponse.getCode(), "000")) {
+                throw new ElectricBillPaymentException("");
+            }
             electricBillResponse = mapToPrePaidResponse(prepaidResponse);
             log.info(electricBillResponse);
-
+            response = transactionService.saveTransaction(responseMapper.mapperToDB(
+                    responseMapper.mapToPrepaidResponse(request,electricBillResponse)));
+            log.info(response);
         }
-        return null;
+        return response;
     }
 
     private static ElectricPrepaidResponse deserializeAPIResponsePrepaid(String jsonString) {
