@@ -2,6 +2,7 @@ package com.neptunesoftware.vtpassintegration.electricity.controller;
 
 import com.neptunesoftware.vtpassintegration.electricity.request.ElectricBillRequest;
 import com.neptunesoftware.vtpassintegration.electricity.response.ElectricBillGenericResponse;
+import com.neptunesoftware.vtpassintegration.electricity.response.ElectricBillResponse;
 import com.neptunesoftware.vtpassintegration.electricity.service.ElectricityBillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +25,7 @@ public class ElectricityController {
 //            return ResponseEntity.status(HttpStatus.OK).body(electricityService.verifyMeterNumber(request));
 //        }
         @PostMapping("/electricity-payment")
-        public ResponseEntity<ElectricBillGenericResponse<?>> electricityPayment(@RequestBody ElectricBillRequest request) {
+        public ResponseEntity<ElectricBillResponse> electricityPayment(@RequestBody ElectricBillRequest request) {
             return ResponseEntity.status(HttpStatus.OK).body(electricityService.electricityPayment(request));
         }
 }

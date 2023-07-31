@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ElectricBillResponseApi<T> {
+public class ElectricBillResponseApi {
 private ElectricPrepaidResponse electricPrepaidResponse;
 private ElectricPostpaidResponse electricPostpaidResponse;
 }

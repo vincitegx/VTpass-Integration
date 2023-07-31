@@ -38,7 +38,7 @@ public class ElectricityMapper {
                 .build();
     }
 
-    public ElectricBillResponse mapToPostPaidResponse(ElectricBillRequest request, ElectricBillResponseApi<?> electricBillResponse) {
+    public ElectricBillResponse mapToPostPaidResponse(ElectricBillRequest request, ElectricBillResponseApi electricBillResponse) {
         return ElectricBillResponse.builder()
                 .code(electricBillResponse.getElectricPostpaidResponse().getCode())
                 .requestId(electricBillResponse.getElectricPostpaidResponse().getRequestId())
@@ -56,7 +56,7 @@ public class ElectricityMapper {
                 .build();
     }
 
-    public ElectricBillResponse mapToPrepaidResponse(ElectricBillRequest request, ElectricBillResponseApi<?> electricBillResponse) {
+    public ElectricBillResponse mapToPrepaidResponse(ElectricBillRequest request, ElectricBillResponseApi electricBillResponse) {
         return ElectricBillResponse.builder()
                 .code(electricBillResponse.getElectricPrepaidResponse().getCode())
                 .requestId(electricBillResponse.getElectricPrepaidResponse().getRequestId())
