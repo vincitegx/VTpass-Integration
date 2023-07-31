@@ -1,5 +1,7 @@
 package com.neptunesoftware.vtpassintegration.data.response;
 
+import lombok.NonNull;
+
 public record DataSubscriptionResponse(
         String code,
         Content content,
@@ -10,6 +12,7 @@ public record DataSubscriptionResponse(
         String purchased_code
 ) {
     public record Content(
+
             Transaction transactions
     ) {
     }
