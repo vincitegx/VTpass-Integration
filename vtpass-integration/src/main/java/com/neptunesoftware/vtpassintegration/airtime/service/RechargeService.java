@@ -1,6 +1,7 @@
 package com.neptunesoftware.vtpassintegration.airtime.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neptunesoftware.vtpassintegration.airtime.mapper.AirtimeRechargeResponseMapper;
 import com.neptunesoftware.vtpassintegration.airtime.request.AirtimeRequest;
 import com.neptunesoftware.vtpassintegration.airtime.request.PurchaseIntlProductsRequest;
@@ -30,7 +31,7 @@ public class RechargeService {
     private final RequestIdGenerator requestIdGenerator;
 
 
-    public Integer buyAirtime(AirtimeRequest airtimeRequest){
+    public TransactionResponse buyAirtime(AirtimeRequest airtimeRequest){
        airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
         AirtimeResponse airtimeResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
@@ -44,8 +45,7 @@ public class RechargeService {
         log.info("TransactionId: {}",airtimeResponse.getTransactionId());
      TransactionRequest transactionRequest = airtimeRechargeResponseMapper.apply(airtimeResponse,airtimeRequest);
        log.info("Mapper: {}",transactionRequest);
-        int transactionResponse = transactionService.saveTransaction(transactionRequest);
-       return transactionResponse;
+        return transactionService.saveTransaction(transactionRequest);
     }
 
 
@@ -87,7 +87,8 @@ public class RechargeService {
 
     }
 
-    public int purchaseIntlProduct(PurchaseIntlProductsRequest purchaseIntlProductsRequest){
+    public TransactionResponse purchaseIntlProduct(PurchaseIntlProductsRequest purchaseIntlProductsRequest){
+
         purchaseIntlProductsRequest.setRequest_id(requestIdGenerator.apply(7));
             PurchaseIntlProductsResponse purchaseIntlProductsResponse = webClientBuilder.build().post()
                 .uri("https://sandbox.vtpass.com/api/pay")
@@ -97,9 +98,11 @@ public class RechargeService {
                 .retrieve()
                 .bodyToMono(PurchaseIntlProductsResponse.class)
                 .block();
+        assert purchaseIntlProductsResponse != null;
+        log.info(purchaseIntlProductsResponse);
         TransactionRequest transactionRequest = airtimeRechargeResponseMapper.applyMap(purchaseIntlProductsResponse,purchaseIntlProductsRequest);
-        int transactionResponse = transactionService.saveTransaction(transactionRequest);
-        return transactionResponse;
+      log.info(transactionRequest);
+       return transactionService.saveTransaction(transactionRequest);
     }
 
     //GET Variation Codes

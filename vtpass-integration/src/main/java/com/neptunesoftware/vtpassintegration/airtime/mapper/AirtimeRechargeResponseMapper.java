@@ -44,8 +44,8 @@ public class AirtimeRechargeResponseMapper {
 
     public TransactionRequest applyMap(PurchaseIntlProductsResponse purchaseIntlProductsResponse, PurchaseIntlProductsRequest purchaseIntlProductsRequest) {
         return   TransactionRequest.builder()
-                .requestId(purchaseIntlProductsResponse.requestId())
-                .tranAmount(purchaseIntlProductsResponse.content().transactions().amount().toString())
+                .requestId(purchaseIntlProductsRequest.getRequest_id())
+                .tranAmount(purchaseIntlProductsRequest.getAmount())
                 .tranDate(Date.from(Instant.now()).toString())
                 .channelName(credentials.getChannelName())
                 .chargeAmount(purchaseIntlProductsResponse.content().transactions().commission().toString())

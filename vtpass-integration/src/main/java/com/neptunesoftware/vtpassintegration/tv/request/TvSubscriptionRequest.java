@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TvSubscriptionRequest {
+    private String request_id;
     private String serviceID;
     private int amount;
     private String billersCode;
