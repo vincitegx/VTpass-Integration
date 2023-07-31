@@ -1,4 +1,4 @@
-package com.neptunesoftware.vtpassintegration.tv.response;
+package com.neptunesoftware.vtpassintegration.tv.domain;
 
 import lombok.Data;
 
