@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ThirdPartyInsuranceContent {
+public class InsuranceContent {
 
     @JsonProperty("transactions")
-    private InsuranceTransaction transactions;
+    private InsuranceTransaction transaction;
 }

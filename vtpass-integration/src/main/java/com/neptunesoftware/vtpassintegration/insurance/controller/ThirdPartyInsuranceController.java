@@ -3,20 +3,18 @@ package com.neptunesoftware.vtpassintegration.insurance.controller;
 import com.neptunesoftware.vtpassintegration.insurance.request.ThirdPartyInsuranceRequest;
 import com.neptunesoftware.vtpassintegration.insurance.response.ThirdPartyInsuranceResponse;
 import com.neptunesoftware.vtpassintegration.insurance.service.ThirdPartyInsuranceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/third-party-insurance")
 public class ThirdPartyInsuranceController {
 
     private final ThirdPartyInsuranceService insuranceService;
 
-    @Autowired
-    public ThirdPartyInsuranceController(ThirdPartyInsuranceService insuranceService) {
-        this.insuranceService = insuranceService;
-    }
 
 //    @GetMapping("/get-variation-codes")
 //    public ThirdPartyInsuranceResponse getVariationCodes() {
