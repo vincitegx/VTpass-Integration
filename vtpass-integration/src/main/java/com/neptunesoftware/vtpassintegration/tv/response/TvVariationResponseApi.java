@@ -1,14 +1,14 @@
 package com.neptunesoftware.vtpassintegration.tv.response;
 
+import com.neptunesoftware.vtpassintegration.tv.domain.TvVariations;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Builder
-public class TvVariationResponse {
+public class TvVariationResponseApi {
     private String serviceName;
     private String convenienceFee;
     private List<TvVariations> variations;
