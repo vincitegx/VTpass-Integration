@@ -2,13 +2,14 @@ package com.neptunesoftware.vtpassintegration.data.service;
 
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
-import com.neptunesoftware.vtpassintegration.data.exception.VerificationException;
 import com.neptunesoftware.vtpassintegration.data.mapper.DataSubscriptionResponseMapper;
 import com.neptunesoftware.vtpassintegration.data.request.DataSubscriptionRequest;
 import com.neptunesoftware.vtpassintegration.data.request.SmileVerificationRequest;
 import com.neptunesoftware.vtpassintegration.data.response.DataSubscriptionResponse;
 import com.neptunesoftware.vtpassintegration.data.response.SmileVerificationResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class DataSubscriptionService {
     private final RequestIdGenerator requestIdGenerator;
     private final SmileVerificationService smileVerificationService;
 
-    public int subscribeForData(DataSubscriptionRequest dataSubscriptionRequest){
+    public TransactionResponse subscribeForData(DataSubscriptionRequest dataSubscriptionRequest){
         if(dataSubscriptionRequest.getServiceID() == "smile-direct"){
             SmileVerificationResponse smileVerificationResponse =
                     smileVerificationService.verifySmileEmail(new SmileVerificationRequest(dataSubscriptionRequest.getBillersCode(), dataSubscriptionRequest.getServiceID()));
             if(smileVerificationResponse.content().Customer_Name() == null){
-                throw new VerificationException("Invalid Billers Code !!!");
+                throw new TransactionException("Invalid Billers Code !!!", null, null);
             }
         }
         dataSubscriptionRequest.setRequest_id(requestIdGenerator.apply(4));
@@ -41,8 +42,11 @@ public class DataSubscriptionService {
                 .retrieve()
                 .bodyToMono(DataSubscriptionResponse.class)
                 .block();
-        TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
-        int transactionResponse = transactionService.saveTransaction(transactionRequest);
-        return transactionResponse;
+        if(dataSubscriptionResponse.code() == "000"){
+            TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
+            return transactionService.saveTransaction(transactionRequest);
+        }else{
+            throw new TransactionException(dataSubscriptionResponse.response_description(), dataSubscriptionResponse.code(), dataSubscriptionResponse.requestId());
+        }
     }
 }

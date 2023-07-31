@@ -7,6 +7,8 @@ import lombok.NonNull;
 @Builder
 public class TransactionRequest{
         @NonNull
+        private String code;
+        @NonNull
         private String requestId;
         @NonNull
         private String serviceId;
