@@ -9,8 +9,6 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.CallBackResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionQueryResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,9 +25,8 @@ public class TransactionService {
     }
 
     public TransactionQueryResponse queryTransaction(String request_id) {
-        System.out.println("entered controller method "+ request_id);
-
-        return webClientBuilder.build()
+        TransactionQueryResponse response = TransactionQueryResponse.builder().build();
+        response = webClientBuilder.build()
                 .post()
                 .uri("https://sandbox.vtpass.com/api/requery")
                 .header("api-key",credentials.getApiKey())
@@ -38,6 +35,11 @@ public class TransactionService {
                 .retrieve()
                 .bodyToMono(TransactionQueryResponse.class)
                 .block();
+        if(response.code() == "000"){
+            return response;
+        }else {
+            throw new TransactionException(response.response_description(), response.code(), request_id);
+        }
     }
 
     public CallBackResponse callBack(CallBackRequest callBackRequest){
