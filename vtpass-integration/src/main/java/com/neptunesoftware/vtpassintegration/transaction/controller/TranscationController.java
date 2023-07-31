@@ -1,5 +1,7 @@
 package com.neptunesoftware.vtpassintegration.transaction.controller;
 
+import com.neptunesoftware.vtpassintegration.transaction.request.CallBackRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.CallBackResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,5 +16,10 @@ public class TranscationController {
     public ResponseEntity<?> queryTransaction(@RequestParam String requestId){
         System.out.println("entered controller method");
         return ResponseEntity.ok(transactionService.queryTransaction(requestId));
+    }
+
+    @PostMapping("call")
+    public ResponseEntity<CallBackResponse> callback(@RequestBody CallBackRequest request){
+        return ResponseEntity.ok(transactionService.callBack(request));
     }
 }
