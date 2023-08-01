@@ -17,7 +17,7 @@ public class SmileVerificationService {
     public SmileVerificationResponse verifySmileEmail(SmileVerificationRequest smileVerificationRequest){
         try{
             return webClientBuilder.build().post()
-                    .uri("https://sandbox.vtpass.com/api/merchant-verify/smile/email")
+                    .uri(credentials.getBaseUrl()+"/api/merchant-verify/smile/email")
                     .header("api-key", credentials.getApiKey())
                     .header("secret-key", credentials.getSecretKey())
                     .bodyValue(smileVerificationRequest)
