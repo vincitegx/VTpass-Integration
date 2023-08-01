@@ -61,6 +61,7 @@ public class TransactionService {
                     .tranStatus(callBackRequest.content().transactions().status())
                     .tranMethod(callBackRequest.content().transactions().method())
                     .tranId(callBackRequest.content().transactions().transactionId())
+
                     .build();
         }else if(callBackRequest.content().transactions().status() == "delivered"){
             transactionRequest = TransactionRequest.builder()
