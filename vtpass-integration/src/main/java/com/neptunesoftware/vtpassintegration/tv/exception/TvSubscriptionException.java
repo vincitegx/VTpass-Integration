@@ -1,4 +1,4 @@
-package com.neptunesoftware.vtpassintegration.tv;
+package com.neptunesoftware.vtpassintegration.tv.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

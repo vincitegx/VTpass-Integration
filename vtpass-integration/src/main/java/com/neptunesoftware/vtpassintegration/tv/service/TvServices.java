@@ -7,7 +7,7 @@ import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
-import com.neptunesoftware.vtpassintegration.tv.TvSubscriptionException;
+import com.neptunesoftware.vtpassintegration.tv.exception.TvSubscriptionException;
 import com.neptunesoftware.vtpassintegration.tv.domain.TvVariationFromApi;
 import com.neptunesoftware.vtpassintegration.tv.mapper.TvSubscriptionMapperResponse;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
@@ -80,20 +80,30 @@ private final WebClient.Builder webClient;
     }
     
     public TvSubscriptionStatusResponse tvSubscriptionStatus(TvSubscriptionStatusRequest request) {
-        TvSubscriptionResponseApi response = webClient.build().post()
-                .uri(credentials.getBaseUrl()+"/api/requery") // Replace with your actual URL
-                .header("api-key",credentials.getApiKey())
-                .header("secret-key",credentials.getSecretKey())
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(TvSubscriptionResponseApi.class)
-                .block();
-        assert response != null;
-        log.info("Response TvSubscription message {}",response);
+        TvSubscriptionStatusResponse statusResponse = null;
+        try {
+            TvSubscriptionResponseApi response = webClient.build().post()
+                    .uri(credentials.getBaseUrl() + "/api/requery") // Replace with your actual URL
+                    .header("api-key", credentials.getApiKey())
+                    .header("secret-key", credentials.getSecretKey())
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(TvSubscriptionResponseApi.class)
+                    .block();
+            assert response != null;
+            if (!Objects.equals(response.getCode(), "000")) {
+                throw new TvSubscriptionException(response.getResponseDescription(),response.getCode());
 
-        return TvSubscriptionStatusResponse.builder()
-                .status(response.getContent().getTransactions().getStatus())
-                .productName(response.getContent().getTransactions().getProductName()).build();
+            }
+                    statusResponse = mapTvToSubscriptionResponse(response);
+            log.info(statusResponse);
+        } catch (TvSubscriptionException e) {
+            log.info("Response TvSubscription message {}",e.getMessage());
+            log.info("ResponseCode: {}",e.getCode());
+        }
+
+
+        return statusResponse;
     }
 
     public TvVariationResponseApi tvVariations(String serviceID) {
@@ -127,6 +137,14 @@ private final WebClient.Builder webClient;
                 .serviceName(tvVariationFromApi.getContent().getServiceName())
                 .convenienceFee(tvVariationFromApi.getContent().getConvinience_fee())
                 .variations(tvVariationFromApi.getContent().getVarations())
+                .build();
+    }
+
+    private static TvSubscriptionStatusResponse mapTvToSubscriptionResponse(TvSubscriptionResponseApi responseApi) {
+        return TvSubscriptionStatusResponse.builder()
+                .status(responseApi.getContent().getTransactions().getStatus())
+                .description(responseApi.getResponseDescription())
+                .code(responseApi.getCode())
                 .build();
     }
 }
