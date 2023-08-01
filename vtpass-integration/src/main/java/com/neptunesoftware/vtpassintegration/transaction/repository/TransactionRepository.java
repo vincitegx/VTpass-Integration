@@ -20,7 +20,7 @@ public class TransactionRepository {
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """;
     private final String UPDATE_TRANSACTION_QUERY = """
-            UPDATE ALT_VTPAY SET TRAN_STATUS = ?, TRAN_METHOD = ?, ISREVERSAL = ? WHERE REQUEST_ID = ? AND TRAN_ID = ?
+            UPDATE ALT_VTPAY SET TRAN_STATUS = ?, TRAN_METHOD = ?, ISREVERSAL = ?, CODE = ? WHERE REQUEST_ID = ? AND TRAN_ID = ?
             """;
     public int saveTransaction(TransactionRequest transactionRequest){
         try {
@@ -40,7 +40,8 @@ public class TransactionRepository {
         try {
             return jdbcTemplate.update(UPDATE_TRANSACTION_QUERY,
                     transactionRequest.getTranStatus(), transactionRequest.getTranMethod(),
-                    transactionRequest.getIsReversal(), transactionRequest.getRequestId(), transactionRequest.getTranId());
+                    transactionRequest.getIsReversal(), transactionRequest.getRequestId(),
+                    transactionRequest.getTranId(), transactionRequest.getCode());
         } catch (DataAccessException e) {
             log.error("Error updating transaction in the database");
             log.error(e.getMessage());
