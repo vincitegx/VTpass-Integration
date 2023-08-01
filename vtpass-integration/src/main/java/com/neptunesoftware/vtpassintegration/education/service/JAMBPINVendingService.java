@@ -8,6 +8,7 @@ import com.neptunesoftware.vtpassintegration.education.request.JAMBProfileVerifi
 import com.neptunesoftware.vtpassintegration.education.response.JAMBProductPurchaseResponse;
 import com.neptunesoftware.vtpassintegration.education.response.JAMBProfileVerificationResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class JAMBPINVendingService {
 
         // Map the VTpass response to the custom JAMBProductPurchaseResponse
         TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, purchaseResponse);
-        Integer transactionResponse = transactionService.saveTransaction(transactionRequest);
+        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
 
         return purchaseResponse;
     }

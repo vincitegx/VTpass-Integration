@@ -6,6 +6,7 @@ import com.neptunesoftware.vtpassintegration.insurance.mapper.ThirdPartyInsuranc
 import com.neptunesoftware.vtpassintegration.insurance.request.ThirdPartyInsuranceRequest;
 import com.neptunesoftware.vtpassintegration.insurance.response.ThirdPartyInsuranceResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +27,7 @@ public class ThirdPartyInsuranceService {
     private final ThirdPartyInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
 
-
-    public Integer purchaseProduct(ThirdPartyInsuranceRequest request) {
+    public TransactionResponse purchaseProduct(ThirdPartyInsuranceRequest request) {
 
         request.setRequestId(requestIdGenerator.apply(4));
         String serviceId = "ui-insure";
@@ -46,25 +46,12 @@ public class ThirdPartyInsuranceService {
 
         // Map the VTpass response to the custom ThirdPartyInsuranceResponse
         TransactionRequest transactionRequest = mapper.mapRequest(request, thirdPartyInsuranceResponse);
-        Integer transResponse = service.saveTransaction(transactionRequest);
+        TransactionResponse transResponse = service.saveTransaction(transactionRequest);
 
         return transResponse;
 
 
     }
-
-
-
-//
-//    public ThirdPartyInsuranceResponse queryTransactionStatus(String requestId) {
-//        String endpoint = " https://sandbox.vtpass.com/api/pay/requery";
-//        headers.setBasicAuth(username, password);
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("request_id", requestId);
-//        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-//        ResponseEntity<ThirdPartyInsuranceResponse> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, ThirdPartyInsuranceResponse.class);
-//        return response.getBody();
-//    }
 
 
 
