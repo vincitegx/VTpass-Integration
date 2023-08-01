@@ -101,8 +101,6 @@ private final WebClient.Builder webClient;
             log.info("Response TvSubscription message {}",e.getMessage());
             log.info("ResponseCode: {}",e.getCode());
         }
-
-
         return statusResponse;
     }
 
