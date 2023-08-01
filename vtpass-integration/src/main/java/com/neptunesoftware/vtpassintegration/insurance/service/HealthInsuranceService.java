@@ -1,5 +1,6 @@
 package com.neptunesoftware.vtpassintegration.insurance.service;
 
+import com.neptunesoftware.vtpassintegration.airtime.response.PurchaseIntlProductsResponse;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.HealthInsuranceMapper;
@@ -9,6 +10,7 @@ import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceO
 import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceVariationResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,7 @@ public class HealthInsuranceService {
                 .block();
     }
 
-    public Integer purchaseHealthInsurance(HealthInsuranceRequest request) {
+    public TransactionResponse purchaseHealthInsurance(HealthInsuranceRequest request) {
         request.setRequestId(requestIdGenerator.apply(4));
         String serviceId = "health-insurance-rhl";
         String apiUrl = "https://sandbox.vtpass.com/api/pay";
@@ -79,7 +81,7 @@ public class HealthInsuranceService {
                 .block();
 
         TransactionRequest transactionRequest = mapper.mapRequest(request, healthInsuranceResponse);
-        Integer transactionResponse = service.saveTransaction(transactionRequest);
+        TransactionResponse transactionResponse = service.saveTransaction(transactionRequest);
 
         return transactionResponse;
     }
