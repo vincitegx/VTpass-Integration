@@ -77,8 +77,7 @@ public class RechargeService {
                     .retrieve()
                     .bodyToMono(IntlProductTypesResponse.class)
                     .block();
-        }
-        catch (TransactionException a){
+        }        catch (TransactionException a){
             throw new IllegalArgumentException(a.getMessage());
         }
 

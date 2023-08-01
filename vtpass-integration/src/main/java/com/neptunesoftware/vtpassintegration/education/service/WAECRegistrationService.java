@@ -7,6 +7,7 @@ import com.neptunesoftware.vtpassintegration.education.mapper.EducationPaymentRe
 import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
 import com.neptunesoftware.vtpassintegration.education.response.ProductRegResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class WAECRegistrationService {
     private final EducationPaymentResponseMapper responseMapper;
     private final RequestIdGenerator requestIdGenerator;
 
-        public Integer purchaseWAECRegistration(ProductRegRequest request) {
+        public TransactionResponse purchaseWAECRegistration(ProductRegRequest request) {
         request.setRequest_id(requestIdGenerator.apply(4));
         String serviceId = "waec-registration"; // Replace with the actual service ID for WAEC registration
         String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC registration
@@ -39,7 +40,7 @@ public class WAECRegistrationService {
             System.out.println(waecRegistrationResponse);
         // Map the VTpass response to the custom WAECRegistrationResponse
         TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
-        Integer transactionResponse = transactionService.saveTransaction(transactionRequest);
+        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
 
         return transactionResponse;
     }
