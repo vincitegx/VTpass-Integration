@@ -21,13 +21,17 @@ public class TransactionService {
     private final WebClient.Builder webClientBuilder;
     public TransactionResponse saveTransaction(TransactionRequest transactionRequest){
         int response = transactionRepository.saveTransaction(transactionRequest);
-        return new TransactionResponse(transactionRequest.getCode(), transactionRequest.getTranStatus(), transactionRequest.getRequestId());
+        if(response == 1){
+            return new TransactionResponse(transactionRequest.getCode(), transactionRequest.getTranStatus(), transactionRequest.getRequestId());
+        }else {
+            throw new TransactionException("Failed to save to DB", null, transactionRequest.getRequestId());
+        }
+
     }
 
     public TransactionQueryResponse queryTransaction(String request_id) {
-        System.out.println("entered controller method "+ request_id);
-
-        return webClientBuilder.build()
+        TransactionQueryResponse response = TransactionQueryResponse.builder().build();
+        response = webClientBuilder.build()
                 .post()
                 .uri("https://sandbox.vtpass.com/api/requery")
                 .header("api-key",credentials.getApiKey())
@@ -36,6 +40,11 @@ public class TransactionService {
                 .retrieve()
                 .bodyToMono(TransactionQueryResponse.class)
                 .block();
+        if(response.code() == "000"){
+            return response;
+        }else {
+            throw new TransactionException(response.response_description(), response.code(), request_id);
+        }
     }
 
     public CallBackResponse callBack(CallBackRequest callBackRequest){
@@ -54,21 +63,22 @@ public class TransactionService {
 
     private int updateTransactionInDB(CallBackRequest callBackRequest) {
         TransactionRequest transactionRequest = TransactionRequest.builder().build();
-        if(callBackRequest.content().transactions().status() == "reversed"){
+        if(callBackRequest.data().content().transactions().status() == "reversed"){
             transactionRequest = TransactionRequest.builder()
+                    .code(callBackRequest.data().code())
                     .requestId(callBackRequest.requestId())
                     .isReversal("Y")
-                    .tranStatus(callBackRequest.content().transactions().status())
-                    .tranMethod(callBackRequest.content().transactions().method())
-                    .tranId(callBackRequest.content().transactions().transactionId())
+                    .tranStatus(callBackRequest.data().content().transactions().status())
+                    .tranMethod(callBackRequest.data().content().transactions().method())
+                    .tranId(callBackRequest.data().content().transactions().transactionId())
                     .build();
-        }else if(callBackRequest.content().transactions().status() == "delivered"){
+        }else if(callBackRequest.data().content().transactions().status() == "delivered"){
             transactionRequest = TransactionRequest.builder()
                     .requestId(callBackRequest.requestId())
                     .isReversal("N")
-                    .tranStatus(callBackRequest.content().transactions().status())
-                    .tranMethod(callBackRequest.content().transactions().method())
-                    .tranId(callBackRequest.content().transactions().transactionId())
+                    .tranStatus(callBackRequest.data().content().transactions().status())
+                    .tranMethod(callBackRequest.data().content().transactions().method())
+                    .tranId(callBackRequest.data().content().transactions().transactionId())
                     .build();
         }
         return transactionRepository.updateTransaction(transactionRequest);
