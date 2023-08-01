@@ -27,11 +27,3 @@ rvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transact
 tvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/response/TransactionResponse.java,d\e\de5dc09227b3adeebade6f3884383e885d1f1254
 ¦
 vvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/exception/TransactionException.java,d\5\d5833a1b86b2cc55c7b9e336bb70e772fcc7b7ac
-¢
-rvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/commons/service/ServiceCategoryService.java,1\6\16e1b81770673fe489c56402fe6785bb63738dc2
-œ
-lvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/commons/service/ServiceIdService.java,8\5\855dd88cb1e90c6c8e4b34bf10b8170f6d084d57
-ž
-nvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/commons/service/RequestIdGenerator.java,f\2\f2cf9a6c22232a3b8f830144922cd13bdd89b348
- 
-pvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/commons/service/VariationCodeService.java,7\9\797e93ced45f2df5910b8753fcadd1e894f241d6
