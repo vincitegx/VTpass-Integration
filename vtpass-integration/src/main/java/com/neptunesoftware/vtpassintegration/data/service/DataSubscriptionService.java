@@ -34,6 +34,7 @@ public class DataSubscriptionService {
             }
         }
         dataSubscriptionRequest.setRequest_id(requestIdGenerator.apply(4));
+        System.out.println(dataSubscriptionRequest);
         DataSubscriptionResponse dataSubscriptionResponse = webClientBuilder.build().post()
                 .uri(credentials.getBaseUrl()+"/api/pay")
                 .header("api-key", credentials.getApiKey())
@@ -42,7 +43,9 @@ public class DataSubscriptionService {
                 .retrieve()
                 .bodyToMono(DataSubscriptionResponse.class)
                 .block();
+        System.out.println(dataSubscriptionResponse);
         if(dataSubscriptionResponse.code().equals("000")){
+            System.out.println("Something happened");
             TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
             return transactionService.saveTransaction(transactionRequest);
         }else{
