@@ -17,7 +17,7 @@ public class AeroService {
     public AeroResponse getProductOptionsForAeroService(String serviceID, String name){
         try{
             return webClientBuilder.build().get()
-                    .uri("https://sandbox.vtpass.com/api/options",
+                    .uri(credentials.getBaseUrl()+"/api/options",
                             uriBuilder -> uriBuilder
                                     .queryParam("serviceID", serviceID)
                                     .queryParam("name", name).build())
