@@ -3,7 +3,7 @@ package com.neptunesoftware.vtpassintegration.airtime.response;
 import lombok.Builder;
 
 import java.util.List;
-@Builder
+
 public record IntlCountriesResponse (
         String response_description ,
         Content content
@@ -24,5 +24,4 @@ public record IntlCountriesResponse (
             String prefix
     ) {
     }
-
 }

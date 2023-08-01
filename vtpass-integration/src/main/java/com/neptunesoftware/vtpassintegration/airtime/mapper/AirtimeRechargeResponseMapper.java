@@ -17,7 +17,8 @@ public class AirtimeRechargeResponseMapper {
     private final Credentials credentials;
     public TransactionRequest apply(AirtimeResponse airtimeResponse, AirtimeRequest airtimeRequest) {
     return     TransactionRequest.builder()
-                .requestId(airtimeResponse.getRequestId())
+                        .code(airtimeResponse.getCode())
+                        .requestId(airtimeResponse.getRequestId())
                         .tranAmount(airtimeResponse.getAmount())
                         .tranDate(Date.from(Instant.now()).toString())
                         .channelName(credentials.getChannelName())
@@ -29,7 +30,7 @@ public class AirtimeRechargeResponseMapper {
                         .paymentCurr(credentials.getPaymentCurrency())
                         .serviceId(airtimeRequest.getServiceID())
                         .taxAmount(null)
-                        .tranStatus(airtimeResponse.getCode())// we will refactor this one later, remind me
+                        .tranStatus(airtimeResponse.getResponse_description())// we will refactor this one later, remind me
                         .tranType(null)
                         .tranId(airtimeRequest.getRequest_id())
                         .tranAppl("api")
@@ -44,6 +45,7 @@ public class AirtimeRechargeResponseMapper {
 
     public TransactionRequest applyMap(PurchaseIntlProductsResponse purchaseIntlProductsResponse, PurchaseIntlProductsRequest purchaseIntlProductsRequest) {
         return   TransactionRequest.builder()
+                .code(purchaseIntlProductsResponse.code())
                 .requestId(purchaseIntlProductsRequest.getRequest_id())
                 .tranAmount(purchaseIntlProductsRequest.getAmount())
                 .tranDate(Date.from(Instant.now()).toString())
@@ -64,40 +66,5 @@ public class AirtimeRechargeResponseMapper {
                 .tranPurpose(purchaseIntlProductsResponse.content().transactions().product_name())//
                 .build();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -1,5 +1,4 @@
 package com.neptunesoftware.vtpassintegration.airtime.response;
-
 import lombok.Data;
 import lombok.NonNull;
 @Data
