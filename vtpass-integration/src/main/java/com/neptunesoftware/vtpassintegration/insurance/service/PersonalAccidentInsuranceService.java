@@ -8,6 +8,7 @@ import com.neptunesoftware.vtpassintegration.insurance.request.PersonalAccidentI
 import com.neptunesoftware.vtpassintegration.insurance.response.PersonalAccidentInsuranceQueryResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.PersonalAccidentInsuranceResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class PersonalAccidentInsuranceService {
     private final TransactionService service;
     private final PersonalAccidentInsuranceMapper mapper;
 
-    public Integer purchasePersonalAccidentInsurance(PersonalAccidentInsurancePurchaseRequest request) {
+    public TransactionResponse purchasePersonalAccidentInsurance(PersonalAccidentInsurancePurchaseRequest request) {
         String apiUrl = "https://sandbox.vtpass.com/api/pay";
         String serviceId = "personal-accident-insurance";
 
@@ -41,24 +42,11 @@ public class PersonalAccidentInsuranceService {
         System.out.println(response);
 
         TransactionRequest transactionRequest = mapper.mapper(request, response);
-        Integer transactionResponse = service.saveTransaction(transactionRequest);
+        TransactionResponse transactionResponse = service.saveTransaction(transactionRequest);
         return transactionResponse;
     }
 
-    public PersonalAccidentInsuranceQueryResponse queryTransactionStatus(String requestId) {
-        String apiUrl = "https://api-service.vtpass.com/api/requery";
 
-        PersonalAccidentInsuranceQueryResponse response = webClientBuilder.build().post()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .bodyValue(new PersonalAccidentInsuranceQueryRequest())
-                .retrieve()
-                .bodyToMono(PersonalAccidentInsuranceQueryResponse.class)
-                .block();
-
-        return response;
-    }
 
 
 }

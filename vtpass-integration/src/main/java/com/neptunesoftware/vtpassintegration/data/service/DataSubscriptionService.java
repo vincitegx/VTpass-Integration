@@ -26,7 +26,7 @@ public class DataSubscriptionService {
     private final SmileVerificationService smileVerificationService;
 
     public TransactionResponse subscribeForData(DataSubscriptionRequest dataSubscriptionRequest){
-        if(dataSubscriptionRequest.getServiceID() == "smile-direct"){
+        if(dataSubscriptionRequest.getServiceID().equals("smile-direct")){
             SmileVerificationResponse smileVerificationResponse =
                     smileVerificationService.verifySmileEmail(new SmileVerificationRequest(dataSubscriptionRequest.getBillersCode(), dataSubscriptionRequest.getServiceID()));
             if(smileVerificationResponse.content().Customer_Name() == null){
@@ -42,7 +42,7 @@ public class DataSubscriptionService {
                 .retrieve()
                 .bodyToMono(DataSubscriptionResponse.class)
                 .block();
-        if(dataSubscriptionResponse.code() == "000"){
+        if(dataSubscriptionResponse.code().equals("000")){
             TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
             return transactionService.saveTransaction(transactionRequest);
         }else{
