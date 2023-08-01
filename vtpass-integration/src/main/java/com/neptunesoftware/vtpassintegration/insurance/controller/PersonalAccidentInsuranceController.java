@@ -20,10 +20,6 @@ public class PersonalAccidentInsuranceController {
         return  ResponseEntity.ok(insuranceService.purchasePersonalAccidentInsurance(request));
     }
 
-    @PostMapping("/query")
-    public ResponseEntity<PersonalAccidentInsuranceQueryResponse> queryTransactionStatus(@RequestParam("request_id") String requestId) {
-        PersonalAccidentInsuranceQueryResponse response = insuranceService.queryTransactionStatus(requestId);
-        return ResponseEntity.ok(response);
-    }
+
 }
 
