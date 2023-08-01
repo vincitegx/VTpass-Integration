@@ -1,5 +1,6 @@
 package com.neptunesoftware.vtpassintegration.tv.controller;
 
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionResponseApi;
 import com.neptunesoftware.vtpassintegration.tv.service.TvServices;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
@@ -13,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v2/tv")
+@RequestMapping("api/v1/tv")
 @Log4j2
-//@Tag(name = "tvSubscription")
 public class TvController {
     private final TvServices tvServices;
 
@@ -25,7 +25,7 @@ public class TvController {
     }
 
     @PostMapping("/tv-subscription")
-    public ResponseEntity<TvSubscriptionResponse> tvSubscription(@RequestBody TvSubscriptionRequest request) {
+    public ResponseEntity<TransactionResponse> tvSubscription(@RequestBody TvSubscriptionRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvSubscription(request));
     }
 
