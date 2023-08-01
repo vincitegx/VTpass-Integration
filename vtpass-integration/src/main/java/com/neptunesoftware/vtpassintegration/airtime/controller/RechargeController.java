@@ -16,37 +16,36 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RechargeController {
     private final RechargeService rechargeService ;
+
+//Purchase products
     @PostMapping
-    public ResponseEntity<?> rechargeAirtime(@Validated @RequestBody AirtimeRequest airtimeRequest){
+    public ResponseEntity<?> rechargeAirtime(@RequestBody AirtimeRequest airtimeRequest){
         return ResponseEntity.ok(rechargeService.buyAirtime(airtimeRequest));
     }
 
-
+// GET International Airtime Countries
     @GetMapping("intlcountires")
-    //task : create a whole service class for intl calls ?????????????
     public ResponseEntity<IntlCountriesResponse> getIntlAirtimeCountries(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeCountries());
     }
 
 
-    //GET International Airtime Product Types
+//GET International Airtime Product Types
     @GetMapping("intlairtimeproducts")
-    //task : create a whole service class for intl calls ?????????????
     public ResponseEntity<IntlProductTypesResponse> getIntlAirtimeProducts(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeProducts());
     }
 
 
-    //GET International Airtime Operators
+//GET International Airtime Operators
     @GetMapping("intlairtimeoperators")
-    //task : create a whole service class for intl calls ?????????????
     public ResponseEntity<IntlAirtimeOperatorsResponse> getIntlAirtimeOperators(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeOperators());
     }
 
-    //GET International Varation Codes
 
 
+//PURCHASE INTERNATIONAL PRODUCT
     @PostMapping("purchaseintlproduct")
     public ResponseEntity<?> purchaseIntlProduct(@Validated @RequestBody PurchaseIntlProductsRequest purchaseIntlProductsRequest){
         return ResponseEntity.ok(rechargeService.purchaseIntlProduct(purchaseIntlProductsRequest));

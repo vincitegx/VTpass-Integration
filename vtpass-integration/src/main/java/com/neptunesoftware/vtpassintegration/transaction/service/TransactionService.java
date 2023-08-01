@@ -30,7 +30,7 @@ public class TransactionService {
     }
 
     public TransactionQueryResponse queryTransaction(String request_id) {
-        TransactionQueryResponse response = TransactionQueryResponse.builder().build();
+        TransactionQueryResponse response;
         response = webClientBuilder.build()
                 .post()
                 .uri("https://sandbox.vtpass.com/api/requery")
