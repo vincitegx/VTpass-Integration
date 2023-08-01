@@ -2,16 +2,24 @@ package com.neptunesoftware.vtpassintegration.transaction.request;
 
 public record CallBackRequest(
         String type,
-        Content content,
+        Data data,
         String response_description,
         Integer amount,
         TransactionDate transaction_date,
         String requestId,
         String purchase_code
 ) {
+    public record Data(
+            String code,
+            Content content
+    ) {
+    }
+
     public record Content(
             Transaction transactions
-    ){ }
+    ) {
+    }
+
     public record Transaction(
             String status,
             String product_name,
@@ -21,8 +29,8 @@ public record CallBackRequest(
             String service_verification,
             String channel,
             Integer commission,
-            Integer total_amount,
-            Integer discount,
+            Double total_amount,
+            Double discount,
             String type,
             String phone,
             String name,
@@ -30,9 +38,10 @@ public record CallBackRequest(
             Integer amount,
             String platform,
             String method,
-            String transactionId,
-            String wallet_credit_id
-    ){}
+            String transactionId
+    ) {
+    }
+
     public record TransactionDate(
             String date,
             Integer timezone_type,
