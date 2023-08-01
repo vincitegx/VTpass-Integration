@@ -26,8 +26,6 @@ public class ThirdPartyInsuranceService {
     private final TransactionService service;
     private final ThirdPartyInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
-
-
     public TransactionResponse purchaseProduct(ThirdPartyInsuranceRequest request) {
 
         request.setRequestId(requestIdGenerator.apply(4));
@@ -53,19 +51,6 @@ public class ThirdPartyInsuranceService {
 
 
     }
-
-
-
-//
-//    public ThirdPartyInsuranceResponse queryTransactionStatus(String requestId) {
-//        String endpoint = " https://sandbox.vtpass.com/api/pay/requery";
-//        headers.setBasicAuth(username, password);
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("request_id", requestId);
-//        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-//        ResponseEntity<ThirdPartyInsuranceResponse> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, ThirdPartyInsuranceResponse.class);
-//        return response.getBody();
-//    }
 
 
 

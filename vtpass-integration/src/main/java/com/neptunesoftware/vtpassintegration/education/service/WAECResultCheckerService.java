@@ -47,36 +47,3 @@ public class WAECResultCheckerService {
 
 
 }
-
-//@Service
-//@RequiredArgsConstructor
-//public class WAECResultCheckerService {
-//
-//    private final Credentials credentials;
-//    private final WebClient.Builder webClientBuilder;
-//    private final TransactionService transactionService;
-//    private final EducationPaymentResponseMapper responseMapper;
-//    private final RequestIdGenerator requestIdGenerator;
-//
-//    public TransactionResponse purchaseWAECResultChecker(ProductRegRequest request) {
-//        request.setRequest_id(requestIdGenerator.apply(4));
-//        String serviceId = "waec"; // Replace with the actual service ID for WAEC result checker
-//        String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC result checker
-//
-//        // Perform the HTTP POST request to the VTpass API
-//        ProductRegResponse productRegResponse = webClientBuilder.build().post()
-//                .uri(apiUrl)
-//                .header("api-key", credentials.getApiKey())
-//                .header("secret-key", credentials.getSecretKey())
-//                .bodyValue(request)
-//                .retrieve()
-//                .bodyToMono(ProductRegResponse.class)
-//                .block();
-//
-//        // Map the VTpass response to the custom WAECResultCheckerResponse
-//        TransactionRequest transactionRequest = responseMapper.mapRequest(request, productRegResponse);
-//        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
-//
-//        return transactionResponse;
-//    }
-//}

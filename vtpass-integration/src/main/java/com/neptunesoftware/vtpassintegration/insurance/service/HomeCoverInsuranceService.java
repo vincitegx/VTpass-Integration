@@ -112,30 +112,6 @@ public class HomeCoverInsuranceService {
         }
     }
 
-    // Method to query transaction status
-//    public HomeCoverTransactionStatus queryTransactionStatus(String requestId) {
-//        String apiUrl = "https://sandbox.vtpass.com/api/requery";
-//
-//        // Prepare the request body
-//        Map<String, String> requestBody = new HashMap<>();
-//        requestBody.put("request_id", requestId);
-//
-//        // Perform the HTTP POST request to the VTpass API
-//        HomeCoverTransactionStatusResponse statusResponse = webClientBuilder.build().post()
-//                .uri(apiUrl)
-//                .header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader())
-//                .bodyValue(requestBody)
-//                .retrieve()
-//                .bodyToMono(HomeCoverTransactionStatusResponse.class)
-//                .block();
-//
-//        if (statusResponse != null && "000".equals(statusResponse.getCode())) {
-//            return statusResponse.getContent();
-//        } else {
-//            throw new RuntimeException("Failed to query transaction status for requestId: " + requestId);
-//        }
-//    }
-
 
 }
 
