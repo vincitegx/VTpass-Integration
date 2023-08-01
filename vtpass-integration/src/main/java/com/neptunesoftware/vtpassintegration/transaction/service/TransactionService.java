@@ -30,9 +30,8 @@ public class TransactionService {
     }
 
     public TransactionQueryResponse queryTransaction(String request_id) {
-        System.out.println("entered controller method "+ request_id);
-
-        return webClientBuilder.build()
+        TransactionQueryResponse response = TransactionQueryResponse.builder().build();
+        response = webClientBuilder.build()
                 .post()
                 .uri("https://sandbox.vtpass.com/api/requery")
                 .header("api-key",credentials.getApiKey())
@@ -41,6 +40,11 @@ public class TransactionService {
                 .retrieve()
                 .bodyToMono(TransactionQueryResponse.class)
                 .block();
+        if(response.code() == "000"){
+            return response;
+        }else {
+            throw new TransactionException(response.response_description(), response.code(), request_id);
+        }
     }
 
     public CallBackResponse callBack(CallBackRequest callBackRequest){
