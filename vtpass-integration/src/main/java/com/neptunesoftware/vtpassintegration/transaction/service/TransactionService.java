@@ -33,14 +33,14 @@ public class TransactionService {
         TransactionQueryResponse response;
         response = webClientBuilder.build()
                 .post()
-                .uri("https://sandbox.vtpass.com/api/requery")
+                .uri(credentials.getBaseUrl()+"/api/requery")
                 .header("api-key",credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(new RequestId(request_id))
                 .retrieve()
                 .bodyToMono(TransactionQueryResponse.class)
                 .block();
-        if(response.code() == "000"){
+        if(response.code().equals("000")){
             return response;
         }else {
             throw new TransactionException(response.response_description(), response.code(), request_id);
