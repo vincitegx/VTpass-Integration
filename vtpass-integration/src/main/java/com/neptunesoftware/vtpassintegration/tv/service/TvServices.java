@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionResponseApi;
 import com.neptunesoftware.vtpassintegration.tv.domain.TvVariationFromApi;
@@ -17,6 +18,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -28,8 +31,7 @@ private final WebClient.Builder webClient;
     private final Credentials credentials;
     private static final String VT_PASS_BASE_URL = "https://sandbox.vtpass.com/api";
 
-    public TvSubscriptionResponse tvSubscription(TvSubscriptionRequest  request) {
-        TvSubscriptionResponse subscriptionResponse = new TvSubscriptionResponse();
+    public TransactionResponse tvSubscription(TvSubscriptionRequest  request) {
         TvSmartCardVerificationResponse verificationApiResponse = verifySmartCardNumber(
                 new VerifySmartCardNumberRequest(request.getBillersCode(),
                 request.getServiceID()));
@@ -45,20 +47,15 @@ private final WebClient.Builder webClient;
                 .retrieve()
                 .bodyToMono(TvSubscriptionResponseApi.class)
                 .block();
-
         assert response != null;
-        subscriptionResponse.setStatus(response.getContent().getTransactions().getStatus());
-        subscriptionResponse.setAmount(response.getAmount());
-        subscriptionResponse.setDescription(response.getResponseDescription());
-        log.info("RequestId {}",response.getRequestId());
-
-        TransactionRequest transactionRequest = responseMapper.mapper(request,response);
-        int dbResponse =  transactionService.saveTransaction(transactionRequest);
-
-        if (dbResponse > 0) {
-            log.info("*****TRANSACTION IS SUCCESSFUL, DATA SAVED TO DATABASE **********");
+        if (response.getCode() != "000") {
+            throw new RuntimeException("");
         }
-        return subscriptionResponse;
+        log.info("RequestId {}",response.getRequestId());
+        TransactionRequest transactionRequest = responseMapper.mapper(request,response);
+        TransactionResponse transactionResponse =  transactionService.saveTransaction(transactionRequest);
+        log.info("*****TRANSACTION IS SUCCESSFUL, DATA SAVED TO DATABASE **********");
+        return transactionResponse;
     }
 
     private TvSmartCardVerificationResponse verifySmartCardNumber(VerifySmartCardNumberRequest request) {

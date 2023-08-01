@@ -1,7 +1,9 @@
 package com.neptunesoftware.vtpassintegration.airtime.response;
 
-import java.util.List;
+import lombok.Builder;
 
+import java.util.List;
+@Builder
 public record IntlCountriesResponse (
         String response_description ,
         Content content
