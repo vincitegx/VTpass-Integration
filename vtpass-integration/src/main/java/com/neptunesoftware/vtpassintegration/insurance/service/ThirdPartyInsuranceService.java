@@ -26,7 +26,6 @@ public class ThirdPartyInsuranceService {
     private final TransactionService service;
     private final ThirdPartyInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
-
     public TransactionResponse purchaseProduct(ThirdPartyInsuranceRequest request) {
 
         request.setRequestId(requestIdGenerator.apply(4));

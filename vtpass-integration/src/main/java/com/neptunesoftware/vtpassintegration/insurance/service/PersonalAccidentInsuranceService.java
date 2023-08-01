@@ -46,20 +46,7 @@ public class PersonalAccidentInsuranceService {
         return transactionResponse;
     }
 
-    public PersonalAccidentInsuranceQueryResponse queryTransactionStatus(String requestId) {
-        String apiUrl = "https://api-service.vtpass.com/api/requery";
 
-        PersonalAccidentInsuranceQueryResponse response = webClientBuilder.build().post()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .bodyValue(new PersonalAccidentInsuranceQueryRequest())
-                .retrieve()
-                .bodyToMono(PersonalAccidentInsuranceQueryResponse.class)
-                .block();
-
-        return response;
-    }
 
 
 }

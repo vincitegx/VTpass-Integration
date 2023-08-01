@@ -1,5 +1,6 @@
 package com.neptunesoftware.vtpassintegration.insurance.service;
 
+import com.neptunesoftware.vtpassintegration.airtime.response.PurchaseIntlProductsResponse;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.HealthInsuranceMapper;
