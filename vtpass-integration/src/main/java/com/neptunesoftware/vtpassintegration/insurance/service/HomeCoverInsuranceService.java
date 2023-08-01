@@ -10,6 +10,7 @@ import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverExtraFi
 import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverOptionResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverPurchaseResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class HomeCoverInsuranceService {
     }
 
     // Method to purchase Home Cover Insurance
-    public Integer purchaseHomeCoverInsurance(HomeCoverPurchaseRequest request) {
+    public TransactionResponse purchaseHomeCoverInsurance(HomeCoverPurchaseRequest request) {
         String apiUrl = "https://sandbox.vtpass.com/api/pay";
         request.setRequest_id(requestIdGenerator.apply(4));
         request.setServiceID("home-cover-insurance");
@@ -104,7 +105,7 @@ public class HomeCoverInsuranceService {
 
         if (purchaseResponse != null && "000".equals(purchaseResponse.getCode())) {
             TransactionRequest transactionRequest = responseMapper.mapRequest(request, purchaseResponse);
-            Integer transactionResponse = transactionService.saveTransaction(transactionRequest);
+            TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
             return transactionResponse;
         } else {
             throw new RuntimeException("Failed to purchase Home Cover Insurance");

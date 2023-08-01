@@ -4,6 +4,7 @@ import com.neptunesoftware.vtpassintegration.insurance.domain.HomeCoverExtraFiel
 import com.neptunesoftware.vtpassintegration.insurance.domain.HomeCoverOption;
 import com.neptunesoftware.vtpassintegration.insurance.request.HomeCoverPurchaseRequest;
 import com.neptunesoftware.vtpassintegration.insurance.service.HomeCoverInsuranceService;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,9 @@ public class HomeCoverInsuranceController {
     }
 
     @PostMapping("/purchase")
-    public ResponseEntity<Integer> purchaseInsurance(@RequestBody HomeCoverPurchaseRequest request) {
-        Integer transactionId = homeCoverInsuranceService.purchaseHomeCoverInsurance(request);
-        return ResponseEntity.ok(transactionId);
+    public ResponseEntity<TransactionResponse> purchaseInsurance(@RequestBody HomeCoverPurchaseRequest request) {
+        TransactionResponse transactionResponse = homeCoverInsuranceService.purchaseHomeCoverInsurance(request);
+        return ResponseEntity.ok(transactionResponse);
     }
 
 //    @PostMapping("/query-transaction")
