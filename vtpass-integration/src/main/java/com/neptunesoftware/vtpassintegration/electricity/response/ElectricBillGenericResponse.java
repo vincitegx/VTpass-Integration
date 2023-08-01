@@ -1,6 +1,11 @@
 package com.neptunesoftware.vtpassintegration.electricity.response;
 
-public interface ElectricBillGenericResponse<T> {
-    String status();
-    T getData();
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class ElectricBillGenericResponse<T> {
+    private ElectricPrepaidResponse electricPrepaidResponse;
+    private ElectricPostpaidResponse electricPostpaidResponse;
 }

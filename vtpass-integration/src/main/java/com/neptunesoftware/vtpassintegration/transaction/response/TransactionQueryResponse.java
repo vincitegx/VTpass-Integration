@@ -1,4 +1,8 @@
 package com.neptunesoftware.vtpassintegration.transaction.response;
+
+import lombok.Builder;
+
+@Builder
 public record TransactionQueryResponse(String code,
                                        Content content,
                                        String response_description,

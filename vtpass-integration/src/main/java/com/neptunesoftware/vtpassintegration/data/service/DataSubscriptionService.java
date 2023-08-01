@@ -35,7 +35,7 @@ public class DataSubscriptionService {
         }
         dataSubscriptionRequest.setRequest_id(requestIdGenerator.apply(4));
         DataSubscriptionResponse dataSubscriptionResponse = webClientBuilder.build().post()
-                .uri("https://sandbox.vtpass.com/api/pay")
+                .uri(credentials.getBaseUrl()+"/api/pay")
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(dataSubscriptionRequest)
@@ -46,7 +46,7 @@ public class DataSubscriptionService {
             TransactionRequest transactionRequest = mapper.apply(dataSubscriptionRequest, dataSubscriptionResponse);
             return transactionService.saveTransaction(transactionRequest);
         }else{
-            throw new TransactionException(dataSubscriptionResponse.response_description(), dataSubscriptionResponse.code(), dataSubscriptionResponse.requestId());
+            throw new TransactionException(dataSubscriptionResponse.response_description(), dataSubscriptionResponse.code(), dataSubscriptionRequest.getRequest_id());
         }
     }
 }
