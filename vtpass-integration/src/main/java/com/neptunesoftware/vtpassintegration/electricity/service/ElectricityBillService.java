@@ -115,7 +115,6 @@ public class ElectricityBillService {
         }
         return new ElectricPostpaidResponse();
     }
-
     private ElectricBillResponseApi mapToPrePaidResponse(ElectricPrepaidResponse response) {
         return  ElectricBillResponseApi.builder()
                 .electricPrepaidResponse(response).build();
