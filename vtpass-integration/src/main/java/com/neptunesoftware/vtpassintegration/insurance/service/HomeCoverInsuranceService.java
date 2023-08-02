@@ -2,13 +2,14 @@ package com.neptunesoftware.vtpassintegration.insurance.service;
 
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
-import com.neptunesoftware.vtpassintegration.insurance.domain.HomeCoverExtraField;
 import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceContent;
+import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceExtraField;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.HomeCoverInsuranceResponseMapper;
 import com.neptunesoftware.vtpassintegration.insurance.request.HomeCoverPurchaseRequest;
-import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverExtraFieldResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverOptionResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverPurchaseResponse;
+import com.neptunesoftware.vtpassintegration.insurance.response.InsuranceExtraFieldsResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
@@ -28,39 +29,21 @@ public class HomeCoverInsuranceService {
     private final HomeCoverInsuranceResponseMapper responseMapper;
     private final RequestIdGenerator requestIdGenerator;
 
-    // Method to get variation codes for Home Cover Insurance plans
-//    public List<HomeCoverVariation> getHomeCoverVariationCodes() {
-//        String apiUrl = "https://sandbox.vtpass.com/api/service-variations?serviceID=home-cover-insurance";
-//
-//        // Perform the HTTP GET request to the VTpass API
-//        HomeCoverVariationResponse variationResponse = webClientBuilder.build().get()
-//                .uri(apiUrl)
-//                .header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader())
-//                .retrieve()
-//                .bodyToMono(HomeCoverVariationResponse.class)
-//                .block();
-//
-//        if (variationResponse != null && "000".equals(variationResponse.getResponse_description())) {
-//            return variationResponse.getContent().getVarations();
-//        } else {
-//            throw new RuntimeException("Failed to fetch Home Cover Insurance variation codes");
-//        }
-//    }
 
     // Method to get extra fields for Home Cover Insurance plans
-    public List<HomeCoverExtraField> getHomeCoverExtraFields() {
+    public List<InsuranceExtraField> getHomeCoverExtraFields() {
         String apiUrl = "https://sandbox.vtpass.com/api/extra-fields?serviceID=home-cover-insurance";
 
         // Perform the HTTP GET request to the VTpass API
-        HomeCoverExtraFieldResponse extraFieldResponse = webClientBuilder.build().get()
+        InsuranceExtraFieldsResponse extraFieldResponse = webClientBuilder.build().get()
                 .uri(apiUrl)
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .retrieve()
-                .bodyToMono(HomeCoverExtraFieldResponse.class)
+                .bodyToMono(InsuranceExtraFieldsResponse.class)
                 .block();
 
-        if (extraFieldResponse != null && "000".equals(extraFieldResponse.getResponse_description())) {
+        if (extraFieldResponse != null && "000".equals(extraFieldResponse.getResponseDescription())) {
             return extraFieldResponse.getContent();
         } else {
             throw new RuntimeException("Failed to fetch Home Cover Insurance extra fields");
@@ -89,9 +72,11 @@ public class HomeCoverInsuranceService {
 
     // Method to purchase Home Cover Insurance
     public TransactionResponse purchaseHomeCoverInsurance(HomeCoverPurchaseRequest request) {
-        String apiUrl = "https://sandbox.vtpass.com/api/pay";
+
         request.setRequest_id(requestIdGenerator.apply(4));
-        request.setServiceID("home-cover-insurance");
+        String apiUrl = credentials.getBaseUrl()+"/api/pay";
+
+     //   request.setServiceID("home-cover-insurance");
 
         // Perform the HTTP POST request to the VTpass API
         HomeCoverPurchaseResponse purchaseResponse = webClientBuilder.build().post()
@@ -103,12 +88,13 @@ public class HomeCoverInsuranceService {
                 .bodyToMono(HomeCoverPurchaseResponse.class)
                 .block();
 
-        if (purchaseResponse != null && "000".equals(purchaseResponse.getCode())) {
+        System.out.println(purchaseResponse);
+
+        if (purchaseResponse.getCode().equals("000")) {
             TransactionRequest transactionRequest = responseMapper.mapRequest(request, purchaseResponse);
-            TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
-            return transactionResponse;
+            return transactionService.saveTransaction(transactionRequest);
         } else {
-            throw new RuntimeException("Failed to purchase Home Cover Insurance");
+            throw new TransactionException(purchaseResponse.getResponse_description(), purchaseResponse.getCode(), purchaseResponse.getRequestId());
         }
     }
 

@@ -10,10 +10,8 @@ public class HealthInsuranceOptionsContent {
 
     @JsonProperty("ServiceName")
     private String serviceName;
-
     @JsonProperty("serviceID")
     private String serviceID;
-
     @JsonProperty("optionName")
     private String optionName;
 

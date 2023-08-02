@@ -1,11 +1,13 @@
 package com.neptunesoftware.vtpassintegration.insurance.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.neptunesoftware.vtpassintegration.insurance.domain.HealthInsuranceExtraField;
+import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceExtraField;
+import lombok.Data;
 
 import java.util.List;
 
-public class HealthInsuranceExtraFieldsResponse {
+@Data
+public class InsuranceExtraFieldsResponse {
 
     @JsonProperty("response_description")
     private String responseDescription;
@@ -17,5 +19,5 @@ public class HealthInsuranceExtraFieldsResponse {
     private String serviceID;
 
     @JsonProperty("content")
-    private List<HealthInsuranceExtraField> content;
+    private List<InsuranceExtraField> content;
 }
