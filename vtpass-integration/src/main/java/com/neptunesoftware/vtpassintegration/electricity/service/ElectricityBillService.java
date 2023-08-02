@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
-import com.neptunesoftware.vtpassintegration.electricity.exception.ElectricBillPaymentException;
 import com.neptunesoftware.vtpassintegration.electricity.mapper.ElectricityMapper;
 import com.neptunesoftware.vtpassintegration.electricity.request.ElectricBillRequest;
 import com.neptunesoftware.vtpassintegration.electricity.request.VerifyMeterNumberRequest;
-import com.neptunesoftware.vtpassintegration.electricity.response.*;
+import com.neptunesoftware.vtpassintegration.electricity.response.ElectricBillResponseApi;
+import com.neptunesoftware.vtpassintegration.electricity.response.ElectricPostpaidResponse;
+import com.neptunesoftware.vtpassintegration.electricity.response.ElectricPrepaidResponse;
+import com.neptunesoftware.vtpassintegration.electricity.response.VerifyMeterNumberResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -28,30 +31,22 @@ public class ElectricityBillService {
     private final TransactionService transactionService;
     private final Credentials credentials;
 
-    private VerifyMeterNumberResponse verifyMeterNumber(VerifyMeterNumberRequest request) {
-        return webClient.build().post()
-                .uri(credentials.getBaseUrl()+"/api/merchant-verify")
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(VerifyMeterNumberResponse.class)
-                .block();
-    }
-
     public TransactionResponse electricityPayment(ElectricBillRequest request) {
         ElectricPostpaidResponse postpaidResponse;
         ElectricPrepaidResponse prepaidResponse;
         TransactionResponse response = null;
-
         ElectricBillResponseApi electricBillResponse;
-        VerifyMeterNumberResponse verifyMeterNumberResponse = verifyMeterNumber
-                (new VerifyMeterNumberRequest(request.getBillersCode(),
-                        request.getServiceID(), request.getVariation_code()));
-        if (verifyMeterNumberResponse.getContent().getMeterNumber() == null) {
-            throw new ElectricBillPaymentException("Invalid Meter Number",verifyMeterNumberResponse.getCode());
+        if (request.getVariation_code().equals("prepaid") || request.getVariation_code().equals("postpaid")) {
+            VerifyMeterNumberResponse verifyMeterNumberResponse = verifyMeterNumber
+                    (new VerifyMeterNumberRequest(request.getBillersCode(),
+                            request.getServiceID(), request.getVariation_code()));
+            if (verifyMeterNumberResponse.getContent().getMeterNumber() == null) {
+                log.info("Invalid Meter Number: {}", request.getBillersCode());
+                throw new TransactionException("INVALID METER NUMBER", "012", null);
+            }
+        } else {
+            throw new TransactionException("INVALID METER TYPE: Type should prepaid or postpaid",null,request.getRequest_id());
         }
-        try {
             request.setRequest_id(requestIdGenerator.apply(4));
             String jsonString = webClient.build().post()
                     .uri(credentials.getBaseUrl()+"/api/pay")
@@ -65,34 +60,41 @@ public class ElectricityBillService {
                 postpaidResponse = deserializeAPIResponsePostPaid(jsonString);
                 log.info(postpaidResponse);
                 if (!Objects.equals(postpaidResponse.getCode(), "000")) {
-                    throw new ElectricBillPaymentException(postpaidResponse.getResponse_description(), postpaidResponse.getCode());
+                    throw new TransactionException(postpaidResponse.getResponse_description(),postpaidResponse.getCode(),request.getRequest_id());
+                }  else {
+                    electricBillResponse = mapToPostPaidResponse(postpaidResponse);
+                    log.info("Postpaid Response: {}", electricBillResponse);
+                    response = transactionService.saveTransaction(responseMapper.mapperToDB(
+                            responseMapper.mapToPostPaidResponse(request, electricBillResponse)));
+                    log.info(response);
                 }
-                electricBillResponse = mapToPostPaidResponse(postpaidResponse);
-                log.info("PostPaid Response: {}", electricBillResponse);
-                response = transactionService.saveTransaction(responseMapper.mapperToDB(
-                        responseMapper.mapToPostPaidResponse(request, electricBillResponse)));
-                log.info(response);
             }
             if (Objects.equals(request.getVariation_code(), "prepaid")) {
                 prepaidResponse = deserializeAPIResponsePrepaid(jsonString);
                 log.info("Prepaid Response: {}", prepaidResponse);
                 if (!Objects.equals(prepaidResponse.getCode(), "000")) {
-                    throw new ElectricBillPaymentException(prepaidResponse.getResponse_description(), prepaidResponse.getCode());
+                    throw new TransactionException(prepaidResponse.getResponse_description(), prepaidResponse.getCode(),request.getRequest_id());
+                }  else {
+                    electricBillResponse = mapToPrePaidResponse(prepaidResponse);
+                    log.info(electricBillResponse);
+                    response = transactionService.saveTransaction(responseMapper.mapperToDB(
+                            responseMapper.mapToPrepaidResponse(request, electricBillResponse)));
+                    log.info(response);
                 }
-                electricBillResponse = mapToPrePaidResponse(prepaidResponse);
-                log.info(electricBillResponse);
-                response = transactionService.saveTransaction(responseMapper.mapperToDB(
-                        responseMapper.mapToPrepaidResponse(request, electricBillResponse)));
-                log.info(response);
             }
-        } catch (ElectricBillPaymentException e) {
-            log.info("ResponseCode: {}",e.getCode());
-            log.info("ResponseCode: {}",e.getMessage());
 
-        }
         return response;
     }
-
+    private VerifyMeterNumberResponse verifyMeterNumber(VerifyMeterNumberRequest request) {
+        return webClient.build().post()
+                .uri(credentials.getBaseUrl()+"/api/merchant-verify")
+                .header("api-key", credentials.getApiKey())
+                .header("secret-key", credentials.getSecretKey())
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(VerifyMeterNumberResponse.class)
+                .block();
+    }
     private static ElectricPrepaidResponse deserializeAPIResponsePrepaid(String jsonString) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -103,7 +105,6 @@ public class ElectricityBillService {
         }
         return new ElectricPrepaidResponse();
     }
-
     private static ElectricPostpaidResponse deserializeAPIResponsePostPaid(String jsonString) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -119,7 +120,6 @@ public class ElectricityBillService {
         return  ElectricBillResponseApi.builder()
                 .electricPrepaidResponse(response).build();
     }
-
     private ElectricBillResponseApi mapToPostPaidResponse(ElectricPostpaidResponse response) {
         return  ElectricBillResponseApi.builder()
                 .electricPostpaidResponse(response).build();
