@@ -14,7 +14,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JambProductPurchaseResponseMapper {
 
-
     private final Credentials credentials;
 
     public TransactionRequest mapPinVendingRequest(JAMBProductPurchaseRequest request, JAMBProductPurchaseResponse response) {
