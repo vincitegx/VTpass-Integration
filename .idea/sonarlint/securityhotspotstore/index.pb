@@ -13,10 +13,6 @@ hvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transact
 mvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/transaction/response/Transactions.java,a\0\a0f6d9e40ea4cb05bb7402cd784e6594453663b1
 ‘
 avtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/tv/service/TvServices.java,1\d\1d5feb68e69d3721599c8c43cad95b6f0fb39105
- 
-pvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/data/request/DataSubscriptionRequest.java,9\6\96bf3753a75fe6b8461b51d77f49a88b9a6f2299
-¢
-rvtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/data/response/DataSubscriptionResponse.java,c\d\cd78dc2e05f9af44f4352f663a14759c4ef76b96
 £
 svtpass-integration/src/main/java/com/neptunesoftware/vtpassintegration/data/response/SmileVerificationResponse.java,a\d\ad7243effde4fdc3dbad76c398ad414790bf4f0f
 ¢
