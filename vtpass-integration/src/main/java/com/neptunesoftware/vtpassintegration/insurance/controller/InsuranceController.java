@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/insurance")
 @RequiredArgsConstructor
@@ -48,8 +50,8 @@ public class InsuranceController {
     }
 
     @GetMapping("extra-fields")
-    public ResponseEntity<InsuranceExtraField> getExtraFields() {
-        return ResponseEntity.ok((InsuranceExtraField) homeCoverInsuranceService.extraFields());
+    public ResponseEntity<List<InsuranceExtraField>> getExtraFields() {
+        return ResponseEntity.ok(homeCoverInsuranceService.extraFields());
     }
 
 }
