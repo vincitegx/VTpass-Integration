@@ -30,7 +30,7 @@ public class RechargeService {
     public TransactionResponse buyAirtime(AirtimeRequest airtimeRequest){
        airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
         AirtimeResponse airtimeResponse = webClientBuilder.build().post()
-                .uri("https://sandbox.vtpass.com/api/pay")
+                .uri(credentials.getBaseUrl()+"/api/pay")
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(airtimeRequest)
@@ -105,7 +105,7 @@ public class RechargeService {
                 .retrieve()
                 .bodyToMono(PurchaseIntlProductsResponse.class)
                 .block();
-            if(purchaseIntlProductsResponse.code().equals("000")) {
+        if(purchaseIntlProductsResponse.code().equals("000")) {
                 log.info(purchaseIntlProductsResponse);
                 TransactionRequest transactionRequest = airtimeRechargeResponseMapper.applyMap(purchaseIntlProductsResponse, purchaseIntlProductsRequest);
                 log.info(transactionRequest);

@@ -6,6 +6,7 @@ import com.neptunesoftware.vtpassintegration.airtime.response.IntlAirtimeOperato
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlCountriesResponse;
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlProductTypesResponse;
 import com.neptunesoftware.vtpassintegration.airtime.service.RechargeService;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,26 +20,26 @@ public class RechargeController {
 
 //Purchase products
     @PostMapping
-    public ResponseEntity<?> rechargeAirtime(@RequestBody AirtimeRequest airtimeRequest){
+    public ResponseEntity<TransactionResponse> rechargeAirtime(@RequestBody AirtimeRequest airtimeRequest){
         return ResponseEntity.ok(rechargeService.buyAirtime(airtimeRequest));
     }
 
 // GET International Airtime Countries
-    @GetMapping("intlcountires")
+    @GetMapping("countries/intl")
     public ResponseEntity<IntlCountriesResponse> getIntlAirtimeCountries(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeCountries());
     }
 
 
 //GET International Airtime Product Types
-    @GetMapping("intlairtimeproducts")
+    @GetMapping("products/intl")
     public ResponseEntity<IntlProductTypesResponse> getIntlAirtimeProducts(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeProducts());
     }
 
 
 //GET International Airtime Operators
-    @GetMapping("intlairtimeoperators")
+    @GetMapping("operators/intl")
     public ResponseEntity<IntlAirtimeOperatorsResponse> getIntlAirtimeOperators(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeOperators());
     }
@@ -46,7 +47,7 @@ public class RechargeController {
 
 
 //PURCHASE INTERNATIONAL PRODUCT
-    @PostMapping("purchaseintlproduct")
+    @PostMapping("product/intl")
     public ResponseEntity<?> purchaseIntlProduct(@Validated @RequestBody PurchaseIntlProductsRequest purchaseIntlProductsRequest){
         return ResponseEntity.ok(rechargeService.purchaseIntlProduct(purchaseIntlProductsRequest));
     }
