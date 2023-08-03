@@ -1,6 +1,6 @@
 package com.neptunesoftware.vtpassintegration.commons.response;
 
-public record AeroResponse(
+public record ProductOptionsResponse(
         String response_description,
         Content content
 ) {
