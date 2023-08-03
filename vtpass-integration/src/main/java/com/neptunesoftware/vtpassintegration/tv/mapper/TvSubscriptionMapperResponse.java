@@ -16,6 +16,7 @@ public class TvSubscriptionMapperResponse {
     private final Credentials credentials;
     public TransactionRequest  mapper( TvSubscriptionRequest tvRequest, TvSubscriptionResponseApi tvResponse) {
         return TransactionRequest.builder()
+                .code(tvResponse.getCode())
                 .requestId(tvResponse.getRequestId())
                 .serviceId(tvRequest.getServiceID())
                 .tranId(tvResponse.getContent().getTransactions().getTransactionId())
