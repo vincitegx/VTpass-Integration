@@ -30,17 +30,17 @@ public class TransactionService {
     }
 
     public TransactionQueryResponse queryTransaction(String request_id) {
-        TransactionQueryResponse response = TransactionQueryResponse.builder().build();
+        TransactionQueryResponse response;
         response = webClientBuilder.build()
                 .post()
-                .uri("https://sandbox.vtpass.com/api/requery")
+                .uri(credentials.getBaseUrl()+"/api/requery")
                 .header("api-key",credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(new RequestId(request_id))
                 .retrieve()
                 .bodyToMono(TransactionQueryResponse.class)
                 .block();
-        if(response.code() == "000"){
+        if(response.code().equals("000")){
             return response;
         }else {
             throw new TransactionException(response.response_description(), response.code(), request_id);
@@ -48,8 +48,8 @@ public class TransactionService {
     }
 
     public CallBackResponse callBack(CallBackRequest callBackRequest){
-        int response = 0;
-        if(callBackRequest.type() == "transaction-update"){
+        int response;
+        if(callBackRequest.type().equals("transaction-update")){
             response = updateTransactionInDB(callBackRequest);
             if(response == 1){
                 return new CallBackResponse("success");
@@ -63,7 +63,7 @@ public class TransactionService {
 
     private int updateTransactionInDB(CallBackRequest callBackRequest) {
         TransactionRequest transactionRequest = TransactionRequest.builder().build();
-        if(callBackRequest.data().content().transactions().status() == "reversed"){
+        if(callBackRequest.data().content().transactions().status().equals("reversed")){
             transactionRequest = TransactionRequest.builder()
                     .code(callBackRequest.data().code())
                     .requestId(callBackRequest.requestId())
@@ -72,7 +72,7 @@ public class TransactionService {
                     .tranMethod(callBackRequest.data().content().transactions().method())
                     .tranId(callBackRequest.data().content().transactions().transactionId())
                     .build();
-        }else if(callBackRequest.data().content().transactions().status() == "delivered"){
+        }else if(callBackRequest.data().content().transactions().status().equals("delivered")){
             transactionRequest = TransactionRequest.builder()
                     .requestId(callBackRequest.requestId())
                     .isReversal("N")

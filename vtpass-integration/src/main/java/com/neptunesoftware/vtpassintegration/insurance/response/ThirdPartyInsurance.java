@@ -1,18 +1,16 @@
-package com.neptunesoftware.vtpassintegration.data.response;
+package com.neptunesoftware.vtpassintegration.insurance.response;
 
-import lombok.NonNull;
-
-public record DataSubscriptionResponse(
+public record ThirdPartyInsurance(
         String code,
         Content content,
         String response_description,
         String requestId,
         String amount,
         TransactionDate transaction_date,
-        String purchased_code
+        String purchased_code,
+        String certUrl
 ) {
     public record Content(
-
             Transaction transactions
     ) {
     }

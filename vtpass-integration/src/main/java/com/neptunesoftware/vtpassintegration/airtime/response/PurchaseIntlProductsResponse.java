@@ -1,8 +1,5 @@
 package com.neptunesoftware.vtpassintegration.airtime.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.NonNull;
-
 public record PurchaseIntlProductsResponse(
 String code,
 Content content,
@@ -14,15 +11,15 @@ String purchased_code
 ) {
 
 
-public record Content(Transactions transactions){ }
+public record Content(
+Transactions transactions
+){}
 
 
-
- public record Transactions(
+public record Transactions(
 String status,
 String product_name,
 String unique_element,
-@JsonProperty("unit_price")
 String unit_price,
 String quantity,
 String  service_verification,
@@ -40,5 +37,4 @@ String platform,
 String method,
 String transactionId
  ){}
-
 }

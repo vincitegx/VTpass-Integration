@@ -17,7 +17,7 @@ public class VariationCodeService {
     public VariationCodeResponse getServiceId(String serviceID){
         try{
             return webClientBuilder.build().get()
-                    .uri("https://sandbox.vtpass.com/api/service-variations",
+                    .uri(credentials.getBaseUrl()+"/api/service-variations",
                             uriBuilder -> uriBuilder.queryParam("serviceID", serviceID).build())
                     .header("api-key", credentials.getApiKey())
                     .header("secret-key", credentials.getSecretKey())
