@@ -26,12 +26,12 @@ public class InsuranceController {
     private final ThirdPartyInsuranceService thirdPartyInsuranceService;
 
     @PostMapping("health")
-    public ResponseEntity<?> purchaseHealthProduct(@RequestBody HealthInsuranceRequest request) {
+    public ResponseEntity<TransactionResponse> purchaseHealthProduct(@RequestBody HealthInsuranceRequest request) {
         return ResponseEntity.ok(healthInsuranceService.purchaseHealthInsurance(request));
     }
 
     @PostMapping("personal")
-    public ResponseEntity<?> purchasePersonalInsurance(@RequestBody PersonalAccidentInsurancePurchaseRequest request) {
+    public ResponseEntity<TransactionResponse> purchasePersonalInsurance(@RequestBody PersonalAccidentInsurancePurchaseRequest request) {
         return  ResponseEntity.ok(personalAccidentInsuranceService.purchasePersonalAccidentInsurance(request));
     }
 
