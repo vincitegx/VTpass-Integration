@@ -1,11 +1,10 @@
 package com.neptunesoftware.vtpassintegration.tv.controller;
 
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
-import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionResponseApi;
-import com.neptunesoftware.vtpassintegration.tv.service.TvServices;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionStatusRequest;
-import com.neptunesoftware.vtpassintegration.tv.response.*;
+import com.neptunesoftware.vtpassintegration.tv.response.TvVariationResponseApi;
+import com.neptunesoftware.vtpassintegration.tv.service.TvServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,7 @@ public class TvController {
     }
 
     @PostMapping("/subscription-status")
-    public ResponseEntity<TvSubscriptionStatusResponse> tvSubscriptionStatus(@RequestBody TvSubscriptionStatusRequest request) {
+    public ResponseEntity<TransactionResponse> tvSubscriptionStatus(@RequestBody TvSubscriptionStatusRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvSubscriptionStatus(request));
     }
 }

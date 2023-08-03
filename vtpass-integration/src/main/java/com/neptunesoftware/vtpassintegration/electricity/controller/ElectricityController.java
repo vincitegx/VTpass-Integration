@@ -21,6 +21,7 @@ public class ElectricityController {
 
         @PostMapping("/electricity-payment")
         public ResponseEntity<TransactionResponse> electricityPayment(@RequestBody ElectricBillRequest request) {
+            HttpStatus status;
             return ResponseEntity.status(HttpStatus.OK).body(electricityService.electricityPayment(request));
         }
 }
