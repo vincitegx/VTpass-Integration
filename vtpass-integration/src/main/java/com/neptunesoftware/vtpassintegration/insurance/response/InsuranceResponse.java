@@ -1,17 +1,17 @@
-package com.neptunesoftware.vtpassintegration.data.response;
+package com.neptunesoftware.vtpassintegration.insurance.response;
 
-import lombok.NonNull;
 
-public record DataSubscriptionResponse(
+public record InsuranceResponse(
+
         String code,
-        Content content,
+        InsuranceContent content,
         String response_description,
         String requestId,
         String amount,
         TransactionDate transaction_date,
         String purchased_code
 ) {
-    public record Content(
+    public record InsuranceContent(
 
             Transaction transactions
     ) {
@@ -31,7 +31,7 @@ public record DataSubscriptionResponse(
             String email,
             String phone,
             String name,
-            Integer convinience_fee,
+            Integer convenience_fee,
             Integer amount,
             String platform,
             String method,
@@ -45,3 +45,11 @@ public record DataSubscriptionResponse(
     ) {
     }
 }
+
+
+
+
+
+
+
+

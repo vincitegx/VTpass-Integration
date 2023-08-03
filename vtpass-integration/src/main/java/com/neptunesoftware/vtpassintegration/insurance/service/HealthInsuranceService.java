@@ -1,21 +1,20 @@
 package com.neptunesoftware.vtpassintegration.insurance.service;
 
-import com.neptunesoftware.vtpassintegration.airtime.response.PurchaseIntlProductsResponse;
 import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.HealthInsuranceMapper;
 import com.neptunesoftware.vtpassintegration.insurance.request.HealthInsuranceRequest;
-import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceExtraFieldsResponse;
+import com.neptunesoftware.vtpassintegration.insurance.response.InsuranceExtraFieldsResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceOptionsResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceVariationResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class HealthInsuranceService {
                 .block();
     }
 
-    public HealthInsuranceExtraFieldsResponse getExtraFields() {
+    public InsuranceExtraFieldsResponse getExtraFields() {
         String serviceId = "health-insurance-rhl";
         String apiUrl = "https://sandbox.vtpass.com/api/extra-fields?serviceID=" + serviceId;
 
@@ -49,7 +48,7 @@ public class HealthInsuranceService {
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .retrieve()
-                .bodyToMono(HealthInsuranceExtraFieldsResponse.class)
+                .bodyToMono(InsuranceExtraFieldsResponse.class)
                 .block();
     }
 
@@ -67,9 +66,9 @@ public class HealthInsuranceService {
     }
 
     public TransactionResponse purchaseHealthInsurance(HealthInsuranceRequest request) {
-        request.setRequestId(requestIdGenerator.apply(4));
-        String serviceId = "health-insurance-rhl";
-        String apiUrl = "https://sandbox.vtpass.com/api/pay";
+        request.setRequest_id(requestIdGenerator.apply(4));
+        System.out.println(request);
+        String apiUrl = credentials.getBaseUrl()+"/api/pay";
 
         HealthInsuranceResponse healthInsuranceResponse = webClientBuilder.build().post()
                 .uri(apiUrl)
@@ -79,26 +78,18 @@ public class HealthInsuranceService {
                 .retrieve()
                 .bodyToMono(HealthInsuranceResponse.class)
                 .block();
+        System.out.println(healthInsuranceResponse);
 
-        TransactionRequest transactionRequest = mapper.mapRequest(request, healthInsuranceResponse);
-        TransactionResponse transactionResponse = service.saveTransaction(transactionRequest);
 
-        return transactionResponse;
+        if (healthInsuranceResponse.getCode().equals("000")){
+            TransactionRequest transactionRequest = mapper.mapRequest(request, healthInsuranceResponse);
+            return service.saveTransaction(transactionRequest);
+        }else {
+            throw new TransactionException(healthInsuranceResponse.getResponseDescription(), healthInsuranceResponse.getCode(), healthInsuranceResponse.getRequestId());
+        }
+
     }
 
-    public HealthInsuranceResponse queryTransactionStatus(String requestId) {
-        String apiUrl = "https://sandbox.vtpass.com/api/requery";
-
-        Mono<HealthInsuranceResponse> responseMono = webClientBuilder.build().post()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .bodyValue("request_id=" + requestId)
-                .retrieve()
-                .bodyToMono(HealthInsuranceResponse.class);
-
-        return responseMono.block();
-    }
 
 
 }
