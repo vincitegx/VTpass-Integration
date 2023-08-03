@@ -6,6 +6,7 @@ import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.education.mapper.ResultCheckerResponseMapper;
 import com.neptunesoftware.vtpassintegration.education.request.WAECResultCheckerRequest;
 import com.neptunesoftware.vtpassintegration.education.response.WAECResultCheckerResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
@@ -25,8 +26,8 @@ public class WAECResultCheckerService {
 
     public TransactionResponse purchaseWAECResultChecker(WAECResultCheckerRequest request) {
         request.setRequest_id(requestIdGenerator.apply(4));
-        String serviceId = "waec"; // Replace with the actual service ID for WAEC result checker
-        String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC result checker
+        String serviceId = "waec"; //
+        String apiUrl = credentials.getBaseUrl()+"/api/pay";
 
         // Perform the HTTP POST request to the VTpass API
         WAECResultCheckerResponse waecResultCheckerResponse = webClientBuilder.build().post()
@@ -38,45 +39,15 @@ public class WAECResultCheckerService {
                 .bodyToMono(WAECResultCheckerResponse.class)
                 .block();
 
-        // Map the VTpass response to the custom WAECResultCheckerResponse
-        TransactionRequest transactionRequest = resultCheckerResponseMapper.mapCheckerRequest(request, waecResultCheckerResponse);
-        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
 
-        return transactionResponse;
+        if (waecResultCheckerResponse.getCode().equals("000")){
+            TransactionRequest transactionRequest = resultCheckerResponseMapper.mapCheckerRequest(request, waecResultCheckerResponse);
+            return transactionService.saveTransaction(transactionRequest);
+        }else {
+            throw new TransactionException(waecResultCheckerResponse.getResponse_description(), waecResultCheckerResponse.getCode(), waecResultCheckerResponse.getRequestId());
+        }
+
     }
 
 
 }
-
-//@Service
-//@RequiredArgsConstructor
-//public class WAECResultCheckerService {
-//
-//    private final Credentials credentials;
-//    private final WebClient.Builder webClientBuilder;
-//    private final TransactionService transactionService;
-//    private final EducationPaymentResponseMapper responseMapper;
-//    private final RequestIdGenerator requestIdGenerator;
-//
-//    public TransactionResponse purchaseWAECResultChecker(ProductRegRequest request) {
-//        request.setRequest_id(requestIdGenerator.apply(4));
-//        String serviceId = "waec"; // Replace with the actual service ID for WAEC result checker
-//        String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC result checker
-//
-//        // Perform the HTTP POST request to the VTpass API
-//        ProductRegResponse productRegResponse = webClientBuilder.build().post()
-//                .uri(apiUrl)
-//                .header("api-key", credentials.getApiKey())
-//                .header("secret-key", credentials.getSecretKey())
-//                .bodyValue(request)
-//                .retrieve()
-//                .bodyToMono(ProductRegResponse.class)
-//                .block();
-//
-//        // Map the VTpass response to the custom WAECResultCheckerResponse
-//        TransactionRequest transactionRequest = responseMapper.mapRequest(request, productRegResponse);
-//        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
-//
-//        return transactionResponse;
-//    }
-//}

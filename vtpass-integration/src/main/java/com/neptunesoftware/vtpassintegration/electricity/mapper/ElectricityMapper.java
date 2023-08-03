@@ -17,6 +17,7 @@ public class ElectricityMapper {
     private final Credentials credentials;
     public TransactionRequest  mapperToDB(ElectricBillResponse electricBillResponse) {
         return TransactionRequest.builder()
+                .code(electricBillResponse.getCode())
                 .requestId(electricBillResponse.getRequestId())
                 .serviceId(electricBillResponse.getServiceId())
                 .tranSender(electricBillResponse.getUniqueElement())
@@ -48,7 +49,7 @@ public class ElectricityMapper {
                 .description(electricBillResponse.getElectricPostpaidResponse().getResponse_description())
                 .uniqueElement(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getUnique_element())
                 .transactionAmount(String.valueOf(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getAmount()))
-                .transactionType("Postpaid")
+                .transactionType(request.getVariation_code())
                 .transactionPlatform(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getPlatform())
                 .method(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getMethod())
                 .productName(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getProduct_name())
@@ -66,7 +67,7 @@ public class ElectricityMapper {
                 .description(electricBillResponse.getElectricPrepaidResponse().getResponse_description())
                 .uniqueElement(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getUnique_element())
                 .transactionAmount(String.valueOf(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getAmount()))
-                .transactionType("PrePaid")
+                .transactionType(request.getVariation_code())
                 .transactionPlatform(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getPlatform())
                 .method(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getMethod())
                 .productName(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getProduct_name())

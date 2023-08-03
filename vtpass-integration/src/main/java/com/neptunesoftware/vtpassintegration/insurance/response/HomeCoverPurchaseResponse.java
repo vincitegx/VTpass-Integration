@@ -1,6 +1,7 @@
 package com.neptunesoftware.vtpassintegration.insurance.response;
 
 import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceContent;
+import com.neptunesoftware.vtpassintegration.insurance.domain.TransactionDate;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,6 +14,6 @@ public class HomeCoverPurchaseResponse {
     private String response_description;
     private String requestId;
     private String amount;
-    private Date transaction_date;
+    private TransactionDate transaction_date;
     private String purchased_code;
 }

@@ -5,7 +5,5 @@ import lombok.Data;
 
 @Data
 public class InsuranceContent {
-
-    @JsonProperty("transactions")
-    private InsuranceTransaction transaction;
+    private InsuranceTransaction transactions;
 }
