@@ -14,9 +14,19 @@ public class ApiExceptionHandler {
         return createApiResponse(HttpStatus.BAD_REQUEST, exception);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<TransactionResponse> runtimeException(RuntimeException exception) {
+        return createApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception);
+    }
+
     private ResponseEntity<TransactionResponse> createApiResponse(HttpStatus httpStatus, TransactionException e) {
         return new ResponseEntity<>(
                 new TransactionResponse(e.getCode(), e.getMessage(), e.getRequestId()),
+                httpStatus);
+    }
+    private ResponseEntity<TransactionResponse> createApiResponse(HttpStatus httpStatus, RuntimeException e) {
+        return new ResponseEntity<>(
+                new TransactionResponse(null, e.getLocalizedMessage(), null),
                 httpStatus);
     }
 }
