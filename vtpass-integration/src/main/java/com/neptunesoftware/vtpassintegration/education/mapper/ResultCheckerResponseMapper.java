@@ -19,6 +19,7 @@ public class ResultCheckerResponseMapper {
 
     public TransactionRequest mapCheckerRequest(WAECResultCheckerRequest request, WAECResultCheckerResponse response) {
         return TransactionRequest.builder()
+                .code(response.getCode())
                 .requestId(response.getRequestId())
                 .channelName(credentials.getChannelName())
                 .chargeAmount(response.getContent().getTransactions().getCommission().toString())
