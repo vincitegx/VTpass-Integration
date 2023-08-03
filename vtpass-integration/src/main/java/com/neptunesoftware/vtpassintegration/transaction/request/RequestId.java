@@ -1,5 +1,4 @@
 package com.neptunesoftware.vtpassintegration.transaction.request;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

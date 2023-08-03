@@ -17,7 +17,7 @@ public class ServiceIdService {
     public ServiceIdResponse getServiceId(String identifier){
         try{
             return webClientBuilder.build().get()
-                    .uri("https://sandbox.vtpass.com/api/services",
+                    .uri(credentials.getBaseUrl()+"/api/services",
                             uriBuilder -> uriBuilder.queryParam("identifier", identifier).build())
                     .header("api-key", credentials.getApiKey())
                     .header("secret-key", credentials.getSecretKey())

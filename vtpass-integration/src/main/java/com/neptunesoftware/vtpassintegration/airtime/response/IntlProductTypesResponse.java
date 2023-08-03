@@ -1,5 +1,4 @@
 package com.neptunesoftware.vtpassintegration.airtime.response;
-
 import java.util.List;
 
 public record IntlProductTypesResponse (

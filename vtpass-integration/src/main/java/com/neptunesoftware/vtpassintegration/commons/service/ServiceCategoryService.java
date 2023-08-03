@@ -14,7 +14,7 @@ public class ServiceCategoryService {
 
     public ServiceCategoryResponse getServiceCategories(){
         return webClientBuilder.build().get()
-                .uri("https://sandbox.vtpass.com/api/service-categories")
+                .uri(credentials.getBaseUrl()+"/api/service-categories")
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .retrieve()
