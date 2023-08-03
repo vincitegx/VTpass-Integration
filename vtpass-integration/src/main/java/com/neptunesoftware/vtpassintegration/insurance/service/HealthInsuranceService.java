@@ -13,11 +13,13 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HealthInsuranceService {
 
     private final Credentials credentials;
@@ -25,19 +27,6 @@ public class HealthInsuranceService {
     private final TransactionService service;
     private final HealthInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
-
-    public HealthInsuranceVariationResponse getVariationCodes() {
-        String serviceId = "health-insurance-rhl";
-        String apiUrl = "https://sandbox.vtpass.com/api/service-variations?serviceID=" + serviceId;
-
-        return webClientBuilder.build().get()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .retrieve()
-                .bodyToMono(HealthInsuranceVariationResponse.class)
-                .block();
-    }
 
     public InsuranceExtraFieldsResponse getExtraFields() {
         String serviceId = "health-insurance-rhl";
@@ -52,22 +41,9 @@ public class HealthInsuranceService {
                 .block();
     }
 
-    public HealthInsuranceOptionsResponse getOptions(String name) {
-        String serviceId = "health-insurance-rhl";
-        String apiUrl = "https://sandbox.vtpass.com/api/options?serviceID=" + serviceId + "&name=" + name;
-
-        return webClientBuilder.build().get()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .retrieve()
-                .bodyToMono(HealthInsuranceOptionsResponse.class)
-                .block();
-    }
-
     public TransactionResponse purchaseHealthInsurance(HealthInsuranceRequest request) {
+        log.info("Purchasing Health Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
-        System.out.println(request);
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
 
         HealthInsuranceResponse healthInsuranceResponse = webClientBuilder.build().post()
@@ -78,19 +54,16 @@ public class HealthInsuranceService {
                 .retrieve()
                 .bodyToMono(HealthInsuranceResponse.class)
                 .block();
-        System.out.println(healthInsuranceResponse);
-
 
         if (healthInsuranceResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = mapper.mapRequest(request, healthInsuranceResponse);
+            log.info("Transaction Successful, saved to Database...");
             return service.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(healthInsuranceResponse.getResponseDescription(), healthInsuranceResponse.getCode(), healthInsuranceResponse.getRequestId());
         }
 
     }
-
-
 
 }
 
