@@ -9,6 +9,5 @@ public class JAMBProductPurchaseRequest {
     private String serviceID;
     private String variation_code;
     private String billersCode;
-    private Double amount;
     private String phone;
 }

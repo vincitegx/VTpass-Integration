@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class HealthInsuranceExtraField {
+public class InsuranceExtraField {
 
     @JsonProperty("optionName")
     private String optionName;

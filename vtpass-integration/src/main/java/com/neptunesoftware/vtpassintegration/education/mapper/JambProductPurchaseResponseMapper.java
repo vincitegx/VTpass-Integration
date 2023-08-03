@@ -19,6 +19,7 @@ public class JambProductPurchaseResponseMapper {
 
     public TransactionRequest mapPinVendingRequest(JAMBProductPurchaseRequest request, JAMBProductPurchaseResponse response) {
         return TransactionRequest.builder()
+                .code(response.getCode())
                 .requestId(response.getRequestId())
                 .channelName(credentials.getChannelName())
                 .chargeAmount(response.getContent().getTransactions().getCommission().toString())

@@ -6,6 +6,7 @@ import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.education.mapper.EducationPaymentResponseMapper;
 import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
 import com.neptunesoftware.vtpassintegration.education.response.ProductRegResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
@@ -24,9 +25,9 @@ public class WAECRegistrationService {
     private final RequestIdGenerator requestIdGenerator;
 
         public TransactionResponse purchaseWAECRegistration(ProductRegRequest request) {
+
         request.setRequest_id(requestIdGenerator.apply(4));
-        String serviceId = "waec-registration"; // Replace with the actual service ID for WAEC registration
-        String apiUrl = "https://sandbox.vtpass.com/api/pay"; // Replace with the actual API endpoint for purchasing WAEC registration
+        String apiUrl = credentials.getBaseUrl() + "/api/pay";
 
         // Perform the HTTP POST request to the VTpass API
         ProductRegResponse waecRegistrationResponse = webClientBuilder.build().post()
@@ -38,11 +39,14 @@ public class WAECRegistrationService {
                 .bodyToMono(ProductRegResponse.class)
                 .block();
             System.out.println(waecRegistrationResponse);
-        // Map the VTpass response to the custom WAECRegistrationResponse
-        TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
-        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
 
-        return transactionResponse;
+            if (waecRegistrationResponse.getCode().equals("000")){
+                TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
+                return transactionService.saveTransaction(transactionRequest);
+            }else {
+                throw new TransactionException(waecRegistrationResponse.getResponse_description(), waecRegistrationResponse.getCode(), waecRegistrationResponse.getRequestId());
+            }
+
     }
 
 

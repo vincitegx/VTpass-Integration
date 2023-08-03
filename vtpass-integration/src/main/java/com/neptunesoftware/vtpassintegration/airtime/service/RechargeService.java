@@ -8,7 +8,6 @@ import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
-import com.neptunesoftware.vtpassintegration.transaction.response.TransactionQueryResponse;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class RechargeService {
     public TransactionResponse buyAirtime(AirtimeRequest airtimeRequest){
        airtimeRequest.setRequest_id(requestIdGenerator.apply(4));
         AirtimeResponse airtimeResponse = webClientBuilder.build().post()
-                .uri("https://sandbox.vtpass.com/api/pay")
+                .uri(credentials.getBaseUrl()+"/api/pay")
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(airtimeRequest)
@@ -40,21 +39,19 @@ public class RechargeService {
                 .block();
         log.info("Response: {}",airtimeResponse.getResponse_description());
         log.info("TransactionId: {}",airtimeResponse.getTransactionId());
-        if(airtimeResponse.getCode() == "000"){
+        if(airtimeResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = airtimeRechargeResponseMapper.apply(airtimeResponse,airtimeRequest);
-            log.info("Mapper: {}",transactionRequest);
             return transactionService.saveTransaction(transactionRequest);
         }else{
             throw new TransactionException(airtimeResponse.getResponse_description(), airtimeResponse.getCode(), airtimeResponse.getRequestId());
         }
-
     }
 
 
     public IntlCountriesResponse getIntlAirtimeCountries(){
         try {
            return webClientBuilder.build().get()
-                    .uri("https://sandbox.vtpass.com/api/get-international-airtime-countries")
+                    .uri(credentials.getBaseUrl()+"/api/get-international-airtime-countries")
                     .header("api-key", credentials.getApiKey())
                     .header("secret-key", credentials.getSecretKey())
                     .retrieve()
@@ -64,14 +61,13 @@ public class RechargeService {
         catch (TransactionException e){
             throw new IllegalArgumentException(e.getMessage());
         }
-
     }
 
 
     public IntlProductTypesResponse getIntlAirtimeProducts(){
         try {
             return webClientBuilder.build().get()
-                    .uri(credentials.getBaseUrl()+"/get-international-airtime-product-types?code=GH")
+                    .uri(credentials.getBaseUrl()+"/api/get-international-airtime-product-types?code=GH")
                     .header("api-key", credentials.getApiKey())
                     .header("secret-key", credentials.getSecretKey())
                     .retrieve()
@@ -80,14 +76,13 @@ public class RechargeService {
         }        catch (TransactionException a){
             throw new IllegalArgumentException(a.getMessage());
         }
-
     }
 
     //GET International Airtime Operators
     public IntlAirtimeOperatorsResponse getIntlAirtimeOperators(){
         try {
         return webClientBuilder.build().get()
-                .uri("https://sandbox.vtpass.com/api/get-international-airtime-operators?code=GH&product_type_id=4")
+                .uri(credentials.getBaseUrl()+"/api/get-international-airtime-operators?code=GH&product_type_id=4")
                 .header("api-key",credentials.getApiKey())
                 .header("secret-key",credentials.getSecretKey())
                 .retrieve()
@@ -97,23 +92,20 @@ public class RechargeService {
         catch (TransactionException b){
             throw new IllegalArgumentException(b.getMessage());
         }
-
-
     }
 
     public TransactionResponse purchaseIntlProduct(PurchaseIntlProductsRequest purchaseIntlProductsRequest){
 
         purchaseIntlProductsRequest.setRequest_id(requestIdGenerator.apply(7));
             PurchaseIntlProductsResponse purchaseIntlProductsResponse = webClientBuilder.build().post()
-                .uri("https://sandbox.vtpass.com/api/pay")
+                .uri(credentials.getBaseUrl()+"/api/pay")
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(purchaseIntlProductsRequest)
                 .retrieve()
                 .bodyToMono(PurchaseIntlProductsResponse.class)
                 .block();
-            if(purchaseIntlProductsResponse.code() == "000") {
-                assert purchaseIntlProductsResponse != null;
+        if(purchaseIntlProductsResponse.code().equals("000")) {
                 log.info(purchaseIntlProductsResponse);
                 TransactionRequest transactionRequest = airtimeRechargeResponseMapper.applyMap(purchaseIntlProductsResponse, purchaseIntlProductsRequest);
                 log.info(transactionRequest);
@@ -123,8 +115,6 @@ public class RechargeService {
                 throw new TransactionException(purchaseIntlProductsResponse.response_description(),purchaseIntlProductsResponse.code(),purchaseIntlProductsResponse.requestId());
             }
     }
-
-    //GET Variation Codes
 
 }
 
