@@ -1,6 +1,7 @@
 package com.neptunesoftware.vtpassintegration.insurance.controller;
 
 import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceContent;
+import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceExtraField;
 import com.neptunesoftware.vtpassintegration.insurance.request.HealthInsuranceRequest;
 import com.neptunesoftware.vtpassintegration.insurance.request.HomeCoverPurchaseRequest;
 import com.neptunesoftware.vtpassintegration.insurance.request.PersonalAccidentInsurancePurchaseRequest;
@@ -14,6 +15,8 @@ import com.neptunesoftware.vtpassintegration.transaction.response.TransactionRes
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/insurance")
@@ -35,24 +38,20 @@ public class InsuranceController {
         return  ResponseEntity.ok(personalAccidentInsuranceService.purchasePersonalAccidentInsurance(request));
     }
 
-    @PostMapping("homeCover")
+    @PostMapping("home-cover")
     public ResponseEntity<TransactionResponse> purchaseHomeCoverInsurance(@RequestBody HomeCoverPurchaseRequest request) {
         TransactionResponse transactionResponse = homeCoverInsuranceService.purchaseHomeCoverInsurance(request);
         return ResponseEntity.ok(transactionResponse);
     }
 
-    @PostMapping("thirdParty")
+    @PostMapping("third-party")
     public ResponseEntity<TransactionResponse> purchaseMotorProduct(@RequestBody ThirdPartyInsuranceRequest request) {
         return ResponseEntity.ok(thirdPartyInsuranceService.purchaseProduct(request));
     }
 
-    @GetMapping("homeCover_extra-fields")
-    public InsuranceExtraFieldsResponse getExtraFields() {
-        return (InsuranceExtraFieldsResponse) homeCoverInsuranceService.getHomeCoverExtraFields();
+    @GetMapping("extra-fields")
+    public ResponseEntity<List<InsuranceExtraField>> getExtraFields() {
+        return ResponseEntity.ok(homeCoverInsuranceService.extraFields());
     }
 
-    @GetMapping("homeCover_options")
-    public InsuranceContent getOptions(@RequestParam("name") String name) {
-        return homeCoverInsuranceService.getHomeCoverOptions(name);
-    }
 }

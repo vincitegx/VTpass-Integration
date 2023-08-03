@@ -12,13 +12,13 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class JAMBPINVendingService {
     private final Credentials credentials;
     private final WebClient.Builder webClientBuilder;
@@ -27,6 +27,7 @@ public class JAMBPINVendingService {
     private final RequestIdGenerator requestIdGenerator;
 
     public JAMBProfileVerificationResponse verifyJAMBProfile(JAMBProfileVerificationRequest request) {
+        log.info("Verifying JAMB profile...");
         String apiUrl = credentials.getBaseUrl()+ "/api/merchant-verify";
 
         JAMBProfileVerificationResponse verificationResponse = webClientBuilder.build().post()
@@ -42,6 +43,7 @@ public class JAMBPINVendingService {
     }
 
     public TransactionResponse purchaseJAMBProduct(JAMBProductPurchaseRequest request) {
+        log.info("Purchasing JAMB product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
 
@@ -56,12 +58,12 @@ public class JAMBPINVendingService {
 
         if (purchaseResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, purchaseResponse);
+            log.info("Transaction is Successful: Data saved...");
             return transactionService.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(purchaseResponse.getCode(), purchaseResponse.getRequestId(), purchaseResponse.getPurchased_code());
         }
 
     }
-
 
 }
