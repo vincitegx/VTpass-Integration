@@ -21,6 +21,7 @@ public class EducationPaymentResponseMapper {
     public TransactionRequest mapRequest(ProductRegRequest request, ProductRegResponse response) {
 
         return TransactionRequest.builder()
+                .code(response.getCode())
                 .requestId(response.getRequestId())
                 .channelName(credentials.getChannelName())
                 .chargeAmount(response.getContent().getTransactions().getCommission().toString())

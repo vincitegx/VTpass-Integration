@@ -15,22 +15,17 @@ import org.springframework.web.bind.annotation.*;
 public class JAMBPinVendingController {
     private final JAMBPINVendingService jambPinVendingService;
 
-    @PostMapping("/verify")
+    @PostMapping("verify")
     public ResponseEntity<JAMBProfileVerificationResponse> verifyJAMBProfile(@RequestBody JAMBProfileVerificationRequest request) {
         JAMBProfileVerificationResponse verificationResponse = jambPinVendingService.verifyJAMBProfile(request);
         return ResponseEntity.ok(verificationResponse);
     }
 
-    @PostMapping("/purchase")
-    public ResponseEntity<JAMBProductPurchaseResponse> purchaseJAMBProduct(@RequestBody JAMBProductPurchaseRequest request) {
-        JAMBProductPurchaseResponse purchaseResponse = jambPinVendingService.purchaseJAMBProduct(request);
-        return ResponseEntity.ok(purchaseResponse);
+    @PostMapping("purchase")
+    public ResponseEntity<?> purchaseJAMBProduct(@RequestBody JAMBProductPurchaseRequest request) {
+        return ResponseEntity.ok(jambPinVendingService.purchaseJAMBProduct(request));
+
     }
 
-//    @PostMapping("/query")
-//    public ResponseEntity<JAMBProductPurchaseResponse> queryTransactionStatus(@RequestParam String requestId) {
-//        JAMBProductPurchaseResponse queryResponse = jambPinVendingService.queryTransactionStatus(requestId);
-//        return ResponseEntity.ok(queryResponse);
-//    }
 }
 

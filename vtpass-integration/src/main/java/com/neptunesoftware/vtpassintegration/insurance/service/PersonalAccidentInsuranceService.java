@@ -4,9 +4,8 @@ import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.PersonalAccidentInsuranceMapper;
 import com.neptunesoftware.vtpassintegration.insurance.request.PersonalAccidentInsurancePurchaseRequest;
-import com.neptunesoftware.vtpassintegration.insurance.request.PersonalAccidentInsuranceQueryRequest;
-import com.neptunesoftware.vtpassintegration.insurance.response.PersonalAccidentInsuranceQueryResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.PersonalAccidentInsuranceResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
@@ -25,11 +24,11 @@ public class PersonalAccidentInsuranceService {
     private final PersonalAccidentInsuranceMapper mapper;
 
     public TransactionResponse purchasePersonalAccidentInsurance(PersonalAccidentInsurancePurchaseRequest request) {
-        String apiUrl = "https://sandbox.vtpass.com/api/pay";
-        String serviceId = "personal-accident-insurance";
+        String apiUrl = credentials.getBaseUrl()+"/api/pay";
+//        String serviceId = "personal-accident-insurance";
 
         request.setRequest_id(requestIdGenerator.apply(4));
-        request.setServiceID(serviceId);
+//        request.setServiceID(serviceId);
 
         PersonalAccidentInsuranceResponse response = webClientBuilder.build().post()
                 .uri(apiUrl)
@@ -41,9 +40,13 @@ public class PersonalAccidentInsuranceService {
                 .block();
         System.out.println(response);
 
-        TransactionRequest transactionRequest = mapper.mapper(request, response);
-        TransactionResponse transactionResponse = service.saveTransaction(transactionRequest);
-        return transactionResponse;
+        if (response.getCode().equals("000")){
+            TransactionRequest transactionRequest = mapper.mapper(request, response);
+            return service.saveTransaction(transactionRequest);
+        }else {
+            throw new TransactionException(response.getResponseDescription(), response.getCode(), response.getRequestId());
+        }
+
     }
 
 

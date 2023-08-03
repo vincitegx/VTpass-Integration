@@ -4,17 +4,13 @@ import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.ThirdPartyInsuranceMapper;
 import com.neptunesoftware.vtpassintegration.insurance.request.ThirdPartyInsuranceRequest;
-import com.neptunesoftware.vtpassintegration.insurance.response.ThirdPartyInsuranceResponse;
+import com.neptunesoftware.vtpassintegration.insurance.response.ThirdPartyInsurance;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
@@ -26,46 +22,30 @@ public class ThirdPartyInsuranceService {
     private final TransactionService service;
     private final ThirdPartyInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
-
-
     public TransactionResponse purchaseProduct(ThirdPartyInsuranceRequest request) {
 
-        request.setRequestId(requestIdGenerator.apply(4));
-        String serviceId = "ui-insure";
-        String apiUrl = "https://sandbox.vtpass.com/api/pay";
-
+        request.setRequest_id(requestIdGenerator.apply(4));
+        String apiUrl = credentials.getBaseUrl()+"/api/pay";
+        System.out.println(request);
         //perform the HTTP request to the VTpass API
-        ThirdPartyInsuranceResponse thirdPartyInsuranceResponse = webClientBuilder.build().post()
+        ThirdPartyInsurance insuranceResponse = webClientBuilder.build().post()
                 .uri(apiUrl)
                 .header("api-key", credentials.getApiKey())
                 .header("secret-key", credentials.getSecretKey())
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(ThirdPartyInsuranceResponse.class)
+                .bodyToMono(ThirdPartyInsurance.class)
                 .block();
-        System.out.println(thirdPartyInsuranceResponse);
+        System.out.println(insuranceResponse);
 
-        // Map the VTpass response to the custom ThirdPartyInsuranceResponse
-        TransactionRequest transactionRequest = mapper.mapRequest(request, thirdPartyInsuranceResponse);
-        TransactionResponse transResponse = service.saveTransaction(transactionRequest);
-
-        return transResponse;
-
+        if (insuranceResponse.code().equals("000")){
+            TransactionRequest transactionRequest = mapper.mapRequest(request, insuranceResponse);
+            return service.saveTransaction(transactionRequest);
+        }else {
+            throw new TransactionException(insuranceResponse.code(), insuranceResponse.response_description(), insuranceResponse.requestId());
+        }
 
     }
-
-
-
-//
-//    public ThirdPartyInsuranceResponse queryTransactionStatus(String requestId) {
-//        String endpoint = " https://sandbox.vtpass.com/api/pay/requery";
-//        headers.setBasicAuth(username, password);
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("request_id", requestId);
-//        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-//        ResponseEntity<ThirdPartyInsuranceResponse> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, ThirdPartyInsuranceResponse.class);
-//        return response.getBody();
-//    }
 
 
 
