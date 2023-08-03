@@ -38,7 +38,8 @@ public record CallBackRequest(
             Integer amount,
             String platform,
             String method,
-            String transactionId
+            String transactionId,
+            String wallet_credit_id
     ) {
     }
 

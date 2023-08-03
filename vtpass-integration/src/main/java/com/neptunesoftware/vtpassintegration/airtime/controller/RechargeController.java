@@ -6,6 +6,7 @@ import com.neptunesoftware.vtpassintegration.airtime.response.IntlAirtimeOperato
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlCountriesResponse;
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlProductTypesResponse;
 import com.neptunesoftware.vtpassintegration.airtime.service.RechargeService;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,38 +17,37 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RechargeController {
     private final RechargeService rechargeService ;
+
+//Purchase products
     @PostMapping
-    public ResponseEntity<?> rechargeAirtime(@Validated @RequestBody AirtimeRequest airtimeRequest){
+    public ResponseEntity<TransactionResponse> rechargeAirtime(@RequestBody AirtimeRequest airtimeRequest){
         return ResponseEntity.ok(rechargeService.buyAirtime(airtimeRequest));
     }
 
-
-    @GetMapping("intlcountires")
-    //task : create a whole service class for intl calls ?????????????
+// GET International Airtime Countries
+    @GetMapping("countries/intl")
     public ResponseEntity<IntlCountriesResponse> getIntlAirtimeCountries(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeCountries());
     }
 
 
-    //GET International Airtime Product Types
-    @GetMapping("intlairtimeproducts")
-    //task : create a whole service class for intl calls ?????????????
+//GET International Airtime Product Types
+    @GetMapping("products/intl")
     public ResponseEntity<IntlProductTypesResponse> getIntlAirtimeProducts(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeProducts());
     }
 
 
-    //GET International Airtime Operators
-    @GetMapping("intlairtimeoperators")
-    //task : create a whole service class for intl calls ?????????????
+//GET International Airtime Operators
+    @GetMapping("operators/intl")
     public ResponseEntity<IntlAirtimeOperatorsResponse> getIntlAirtimeOperators(){
         return ResponseEntity.ok(rechargeService.getIntlAirtimeOperators());
     }
 
-    //GET International Varation Codes
 
 
-    @PostMapping("purchaseintlproduct")
+//PURCHASE INTERNATIONAL PRODUCT
+    @PostMapping("product/intl")
     public ResponseEntity<?> purchaseIntlProduct(@Validated @RequestBody PurchaseIntlProductsRequest purchaseIntlProductsRequest){
         return ResponseEntity.ok(rechargeService.purchaseIntlProduct(purchaseIntlProductsRequest));
     }

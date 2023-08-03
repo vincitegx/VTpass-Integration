@@ -31,7 +31,7 @@ public record DataSubscriptionResponse(
             String email,
             String phone,
             String name,
-            Integer convenience_fee,
+            Integer convinience_fee,
             Integer amount,
             String platform,
             String method,
