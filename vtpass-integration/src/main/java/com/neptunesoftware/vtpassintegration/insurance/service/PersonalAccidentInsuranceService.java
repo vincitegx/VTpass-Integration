@@ -25,10 +25,8 @@ public class PersonalAccidentInsuranceService {
 
     public TransactionResponse purchasePersonalAccidentInsurance(PersonalAccidentInsurancePurchaseRequest request) {
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
-//        String serviceId = "personal-accident-insurance";
 
         request.setRequest_id(requestIdGenerator.apply(4));
-//        request.setServiceID(serviceId);
 
         PersonalAccidentInsuranceResponse response = webClientBuilder.build().post()
                 .uri(apiUrl)
