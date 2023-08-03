@@ -3,51 +3,33 @@ package com.neptunesoftware.vtpassintegration.insurance.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ThirdPartyInsuranceRequest {
 
-    @JsonProperty("request_id")
-    private String requestId;
-
-    @JsonProperty("serviceID")
+    private String request_id;
     private String serviceID;
-
-    @JsonProperty("billersCode")
     private String billersCode;
-
-    @JsonProperty("variation_code")
-    private String variationCode;
-
-    @JsonProperty("amount")
-    private Double amount;
-
-    @JsonProperty("phone")
+    private String variation_code;
+    private Integer amount;
     private String phone;
-
     @JsonProperty("Insured_Name")
-    private String insuredName;
-
+    private String insured_Name;
     @JsonProperty("Engine_Number")
-    private String engineNumber;
-
+    private String engine_Number;
     @JsonProperty("Chasis_Number")
-    private String chasisNumber;
-
+    private String chasis_Number;
     @JsonProperty("Plate_Number")
-    private String plateNumber;
-
+    private String plate_Number;
     @JsonProperty("Vehicle_Make")
-    private String vehicleMake;
-
+    private String vehicle_Make;
     @JsonProperty("Vehicle_Color")
-    private String vehicleColor;
-
+    private String vehicle_Color;
     @JsonProperty("Vehicle_Model")
-    private String vehicleModel;
-
+    private String vehicle_Model;
     @JsonProperty("Year_of_Make")
-    private String yearOfMake;
-
+    private String year_of_Make;
     @JsonProperty("Contact_Address")
-    private String contactAddress;
+    private String contact_Address;
 }

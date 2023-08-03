@@ -7,6 +7,7 @@ import com.neptunesoftware.vtpassintegration.education.request.JAMBProductPurcha
 import com.neptunesoftware.vtpassintegration.education.request.JAMBProfileVerificationRequest;
 import com.neptunesoftware.vtpassintegration.education.response.JAMBProductPurchaseResponse;
 import com.neptunesoftware.vtpassintegration.education.response.JAMBProfileVerificationResponse;
+import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
@@ -26,7 +27,7 @@ public class JAMBPINVendingService {
     private final RequestIdGenerator requestIdGenerator;
 
     public JAMBProfileVerificationResponse verifyJAMBProfile(JAMBProfileVerificationRequest request) {
-        String apiUrl = "https://sandbox.vtpass.com/api/merchant-verify";
+        String apiUrl = credentials.getBaseUrl()+ "/api/merchant-verify";
 
         JAMBProfileVerificationResponse verificationResponse = webClientBuilder.build().post()
                 .uri(apiUrl)
@@ -40,9 +41,9 @@ public class JAMBPINVendingService {
         return verificationResponse;
     }
 
-    public JAMBProductPurchaseResponse purchaseJAMBProduct(JAMBProductPurchaseRequest request) {
-//        request.setServiceID("jamb");
-        String apiUrl = "https://sandbox.vtpass.com/api/pay";
+    public TransactionResponse purchaseJAMBProduct(JAMBProductPurchaseRequest request) {
+        request.setRequest_id(requestIdGenerator.apply(4));
+        String apiUrl = credentials.getBaseUrl()+"/api/pay";
 
         JAMBProductPurchaseResponse purchaseResponse = webClientBuilder.build().post()
                 .uri(apiUrl)
@@ -53,28 +54,14 @@ public class JAMBPINVendingService {
                 .bodyToMono(JAMBProductPurchaseResponse.class)
                 .block();
 
-        // Map the VTpass response to the custom JAMBProductPurchaseResponse
-        TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, purchaseResponse);
-        TransactionResponse transactionResponse = transactionService.saveTransaction(transactionRequest);
+        if (purchaseResponse.getCode().equals("000")){
+            TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, purchaseResponse);
+            return transactionService.saveTransaction(transactionRequest);
+        }else {
+            throw new TransactionException(purchaseResponse.getCode(), purchaseResponse.getRequestId(), purchaseResponse.getPurchased_code());
+        }
 
-        return purchaseResponse;
     }
 
-//    public JAMBProductPurchaseResponse queryTransactionStatus(String requestId) {
-//        String apiUrl = "https://api-service.vtpass.com/api/requery";
-//
-//        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-//        body.add("request_id", requestId);
-//
-//        JAMBProductPurchaseResponse queryResponse = webClientBuilder.build().post()
-//                .uri(apiUrl)
-//                .header("api-key", credentials.getApiKey())
-//                .header("secret-key", credentials.getSecretKey())
-//                .bodyValue(body)
-//                .retrieve()
-//                .bodyToMono(JAMBProductPurchaseResponse.class)
-//                .block();
-//
-//        return queryResponse;
-//    }
+
 }
