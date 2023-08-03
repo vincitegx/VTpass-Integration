@@ -14,6 +14,7 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HomeCoverInsuranceService {
 
     private final Credentials credentials;
@@ -31,7 +33,8 @@ public class HomeCoverInsuranceService {
 
 
     // Method to get extra fields for Home Cover Insurance plans
-    public List<InsuranceExtraField> getHomeCoverExtraFields() {
+    public List<InsuranceExtraField> extraFields() {
+        log.info("Getting Extra fields...");
         String apiUrl = "https://sandbox.vtpass.com/api/extra-fields?serviceID=home-cover-insurance";
 
         // Perform the HTTP GET request to the VTpass API
@@ -44,39 +47,17 @@ public class HomeCoverInsuranceService {
                 .block();
 
         if (extraFieldResponse != null && "000".equals(extraFieldResponse.getResponseDescription())) {
-            return extraFieldResponse.getContent();
+            return extraFields();
         } else {
             throw new RuntimeException("Failed to fetch Home Cover Insurance extra fields");
         }
     }
 
-    // Method to get options for a specific extra field in Home Cover Insurance plans
-    public InsuranceContent getHomeCoverOptions(String optionName) {
-        String apiUrl = "https://sandbox.vtpass.com/api/options?serviceID=home-cover-insurance&name=" + optionName;
-
-        // Perform the HTTP GET request to the VTpass API
-        HomeCoverOptionResponse optionResponse = webClientBuilder.build().get()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .retrieve()
-                .bodyToMono(HomeCoverOptionResponse.class)
-                .block();
-
-        if (optionResponse != null && "000".equals(optionResponse.getResponse_description())) {
-            return optionResponse.getContent();
-        } else {
-            throw new RuntimeException("Failed to fetch options for Home Cover Insurance field: " + optionName);
-        }
-    }
-
     // Method to purchase Home Cover Insurance
     public TransactionResponse purchaseHomeCoverInsurance(HomeCoverPurchaseRequest request) {
-
+        log.info("Purchasing Home cover Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
-
-     //   request.setServiceID("home-cover-insurance");
 
         // Perform the HTTP POST request to the VTpass API
         HomeCoverPurchaseResponse purchaseResponse = webClientBuilder.build().post()
@@ -88,16 +69,14 @@ public class HomeCoverInsuranceService {
                 .bodyToMono(HomeCoverPurchaseResponse.class)
                 .block();
 
-        System.out.println(purchaseResponse);
-
         if (purchaseResponse.getCode().equals("000")) {
             TransactionRequest transactionRequest = responseMapper.mapRequest(request, purchaseResponse);
+            log.info("Transaction Successful, saved to Database...");
             return transactionService.saveTransaction(transactionRequest);
         } else {
             throw new TransactionException(purchaseResponse.getResponse_description(), purchaseResponse.getCode(), purchaseResponse.getRequestId());
         }
     }
-
 
 }
 
