@@ -1,10 +1,8 @@
 package com.neptunesoftware.vtpassintegration.transaction.exception;
 
-import com.neptunesoftware.vtpassintegration.data.exception.VerificationException;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
