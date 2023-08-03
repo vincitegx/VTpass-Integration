@@ -11,11 +11,13 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WAECRegistrationService {
 
     private final Credentials credentials;
@@ -24,8 +26,8 @@ public class WAECRegistrationService {
     private final EducationPaymentResponseMapper responseMapper;
     private final RequestIdGenerator requestIdGenerator;
 
-        public TransactionResponse purchaseWAECRegistration(ProductRegRequest request) {
-
+    public TransactionResponse purchaseWAECRegistration(ProductRegRequest request) {
+        log.info("Purchasing Waec Registration product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl() + "/api/pay";
 
@@ -38,16 +40,14 @@ public class WAECRegistrationService {
                 .retrieve()
                 .bodyToMono(ProductRegResponse.class)
                 .block();
-            System.out.println(waecRegistrationResponse);
 
             if (waecRegistrationResponse.getCode().equals("000")){
                 TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
+                log.info("TRANSACTION SUCCESSFUL...");
                 return transactionService.saveTransaction(transactionRequest);
             }else {
                 throw new TransactionException(waecRegistrationResponse.getResponse_description(), waecRegistrationResponse.getCode(), waecRegistrationResponse.getRequestId());
             }
-
     }
-
 
 }

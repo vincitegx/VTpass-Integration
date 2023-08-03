@@ -10,11 +10,13 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PersonalAccidentInsuranceService {
 
     private final Credentials credentials;
@@ -25,10 +27,8 @@ public class PersonalAccidentInsuranceService {
 
     public TransactionResponse purchasePersonalAccidentInsurance(PersonalAccidentInsurancePurchaseRequest request) {
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
-//        String serviceId = "personal-accident-insurance";
-
+        log.info("Purchasing Personal Accident Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
-//        request.setServiceID(serviceId);
 
         PersonalAccidentInsuranceResponse response = webClientBuilder.build().post()
                 .uri(apiUrl)
@@ -38,11 +38,11 @@ public class PersonalAccidentInsuranceService {
                 .retrieve()
                 .bodyToMono(PersonalAccidentInsuranceResponse.class)
                 .block();
-        System.out.println(response);
 
         if (response.getCode().equals("000")){
             TransactionRequest transactionRequest = mapper.mapper(request, response);
-            return service.saveTransaction(transactionRequest);
+
+            log.info("Transaction Successful, saved to Database...");return service.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(response.getResponseDescription(), response.getCode(), response.getRequestId());
         }
