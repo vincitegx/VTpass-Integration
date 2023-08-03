@@ -27,7 +27,7 @@ public class EducationController {
         return ResponseEntity.ok(waecRegistrationService.purchaseWAECRegistration(request));
     }
 
-    @PostMapping("waecResult")
+    @PostMapping("waec-result")
     public ResponseEntity<TransactionResponse> purchaseWAECResult(@RequestBody ProductRegRequest request) {
         return ResponseEntity.ok(waecRegistrationService.purchaseWAECRegistration(request));
     }
@@ -41,6 +41,5 @@ public class EducationController {
     @PostMapping("jamb")
     public ResponseEntity<TransactionResponse> purchaseJAMBProduct(@RequestBody JAMBProductPurchaseRequest request) {
         return ResponseEntity.ok(jambPinVendingService.purchaseJAMBProduct(request));
-///        return ResponseEntity.ok(dataSubscriptionService.subscribeForData(dataSubscriptionRequest));
     }
 }
