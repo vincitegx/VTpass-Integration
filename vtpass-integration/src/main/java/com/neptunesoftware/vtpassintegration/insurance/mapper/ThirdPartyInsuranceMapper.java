@@ -38,7 +38,6 @@ public class ThirdPartyInsuranceMapper {
                 .tranMethod(response.content().transactions().method())
                 .tranPurpose(response.content().transactions().product_name())
                 .tranDate(Date.from(Instant.now()).toString())
-
                 .build();
     }
 }

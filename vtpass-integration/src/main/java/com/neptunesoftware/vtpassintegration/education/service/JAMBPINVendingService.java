@@ -58,7 +58,7 @@ public class JAMBPINVendingService {
 
         if (purchaseResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, purchaseResponse);
-            log.info("Transaction is Successful: Data saved...");
+            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
             return transactionService.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(purchaseResponse.getCode(), purchaseResponse.getRequestId(), purchaseResponse.getPurchased_code());

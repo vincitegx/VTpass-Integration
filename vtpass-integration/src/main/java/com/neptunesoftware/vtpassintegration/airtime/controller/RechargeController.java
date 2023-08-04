@@ -5,6 +5,7 @@ import com.neptunesoftware.vtpassintegration.airtime.request.PurchaseIntlProduct
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlAirtimeOperatorsResponse;
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlCountriesResponse;
 import com.neptunesoftware.vtpassintegration.airtime.response.IntlProductTypesResponse;
+import com.neptunesoftware.vtpassintegration.airtime.response.PurchaseIntlProductsResponse;
 import com.neptunesoftware.vtpassintegration.airtime.service.RechargeService;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,22 +34,22 @@ public class RechargeController {
 
 //GET International Airtime Product Types
     @GetMapping("products/intl")
-    public ResponseEntity<IntlProductTypesResponse> getIntlAirtimeProducts(){
-        return ResponseEntity.ok(rechargeService.getIntlAirtimeProducts());
+    public ResponseEntity<IntlProductTypesResponse> getIntlAirtimeProducts(@RequestParam String code){
+        return ResponseEntity.ok(rechargeService.getIntlAirtimeProducts(code));
     }
 
 
 //GET International Airtime Operators
     @GetMapping("operators/intl")
-    public ResponseEntity<IntlAirtimeOperatorsResponse> getIntlAirtimeOperators(){
-        return ResponseEntity.ok(rechargeService.getIntlAirtimeOperators());
+    public ResponseEntity<IntlAirtimeOperatorsResponse> getIntlAirtimeOperators(@RequestParam String code, @RequestParam("product_type_id") String product_type_id){
+        return ResponseEntity.ok(rechargeService.getIntlAirtimeOperators(code, product_type_id));
     }
 
 
 
 //PURCHASE INTERNATIONAL PRODUCT
     @PostMapping("product/intl")
-    public ResponseEntity<?> purchaseIntlProduct(@Validated @RequestBody PurchaseIntlProductsRequest purchaseIntlProductsRequest){
+    public ResponseEntity<TransactionResponse> purchaseIntlProduct(@RequestBody PurchaseIntlProductsRequest purchaseIntlProductsRequest){
         return ResponseEntity.ok(rechargeService.purchaseIntlProduct(purchaseIntlProductsRequest));
     }
 
