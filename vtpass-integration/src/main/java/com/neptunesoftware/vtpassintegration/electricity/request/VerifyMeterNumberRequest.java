@@ -9,6 +9,4 @@ public class VerifyMeterNumberRequest {
    private String billersCode;
    private String serviceID;
    private String type;
-
-
 }
