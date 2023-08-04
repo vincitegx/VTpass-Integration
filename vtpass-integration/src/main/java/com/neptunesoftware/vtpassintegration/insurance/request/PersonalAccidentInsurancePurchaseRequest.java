@@ -13,7 +13,7 @@ public class PersonalAccidentInsurancePurchaseRequest {
     private String billersCode;
     @NonNull
     private String variation_code;
-    private Double amount;
+    private Integer amount;
     @NonNull
     private String phone;
     @NonNull
