@@ -39,7 +39,7 @@ public class HomeCoverInsuranceService {
                     .bodyToMono(InsuranceExtraFieldsResponse.class)
                     .block();
         } catch (Exception ex) {
-            throw new TransactionException("EXTRA FIELDS DOES NOT EXIST", "012", null);
+            throw new TransactionException("ERROR, EXTRA FIELDS DOES NOT EXIST", "012", null);
         }
     }
 
@@ -62,7 +62,7 @@ public class HomeCoverInsuranceService {
 
         if (purchaseResponse.getCode().equals("000")) {
             TransactionRequest transactionRequest = responseMapper.mapRequest(request, purchaseResponse);
-            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
+            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE....");
             return transactionService.saveTransaction(transactionRequest);
         } else {
             throw new TransactionException(purchaseResponse.getResponse_description(), purchaseResponse.getCode(), purchaseResponse.getRequestId());
