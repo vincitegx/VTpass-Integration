@@ -31,10 +31,10 @@ public class AirtimeRechargeResponseMapper {
                         .serviceId(airtimeRequest.getServiceID())
                         .taxAmount(null)
                         .tranStatus(airtimeResponse.getResponse_description())// we will refactor this one later, remind me
-                        .tranType(null)
+                        .tranType("Airtime")
                         .tranId(airtimeRequest.getRequest_id())
                         .tranAppl("api")
-                        .tranMethod(null)
+                        .tranMethod("Api")
                         .tranPurpose(null)
                         .tranDate(Date.from(Instant.now()).toString())
                         .build();
