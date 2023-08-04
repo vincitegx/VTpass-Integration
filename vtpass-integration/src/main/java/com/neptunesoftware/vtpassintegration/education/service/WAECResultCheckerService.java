@@ -27,6 +27,7 @@ public class WAECResultCheckerService {
     private final RequestIdGenerator requestIdGenerator;
 
     public TransactionResponse purchaseWAECResultChecker(WAECResultCheckerRequest request) {
+        TransactionResponse transactionResponse;
         log.info("Purchasing Waec Result Checker product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
@@ -43,8 +44,9 @@ public class WAECResultCheckerService {
 
         if (waecResultCheckerResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = resultCheckerResponseMapper.mapCheckerRequest(request, waecResultCheckerResponse);
+            transactionResponse = transactionService.saveTransaction(transactionRequest);
             log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
-            return transactionService.saveTransaction(transactionRequest);
+            return transactionResponse;
         }else {
             throw new TransactionException(waecResultCheckerResponse.getResponse_description(), waecResultCheckerResponse.getCode(), waecResultCheckerResponse.getRequestId());
         }
