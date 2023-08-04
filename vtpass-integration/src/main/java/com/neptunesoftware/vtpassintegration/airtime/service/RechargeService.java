@@ -53,44 +53,50 @@ public class RechargeService {
            return webClientBuilder.build().get()
                     .uri(credentials.getBaseUrl()+"/api/get-international-airtime-countries")
                     .header("api-key", credentials.getApiKey())
-                    .header("secret-key", credentials.getSecretKey())
+                    .header("public-key", credentials.getPublicKey())
                     .retrieve()
                     .bodyToMono(IntlCountriesResponse.class)
                     .block();
         }
-        catch (TransactionException e){
-            throw new IllegalArgumentException(e.getMessage());
+         catch (Exception e){
+            throw new TransactionException (e.getMessage(), null, null);
         }
     }
 
 
-    public IntlProductTypesResponse getIntlAirtimeProducts(){
+    public IntlProductTypesResponse getIntlAirtimeProducts(String code){
         try {
             return webClientBuilder.build().get()
-                    .uri(credentials.getBaseUrl()+"/api/get-international-airtime-product-types?code=GH")
+                    .uri(credentials.getBaseUrl()+"/api/get-international-airtime-product-types",
+                            uriBuilder -> uriBuilder
+                            .queryParam("code", code).build())
                     .header("api-key", credentials.getApiKey())
-                    .header("secret-key", credentials.getSecretKey())
+                    .header("public-key", credentials.getPublicKey())
                     .retrieve()
                     .bodyToMono(IntlProductTypesResponse.class)
                     .block();
-        }        catch (TransactionException a){
-            throw new IllegalArgumentException(a.getMessage());
+        }        catch (Exception e){
+            throw new TransactionException (e.getMessage(), null, null);
         }
     }
 
     //GET International Airtime Operators
-    public IntlAirtimeOperatorsResponse getIntlAirtimeOperators(){
+    public IntlAirtimeOperatorsResponse getIntlAirtimeOperators(String code, String product_type_id){
         try {
         return webClientBuilder.build().get()
-                .uri(credentials.getBaseUrl()+"/api/get-international-airtime-operators?code=GH&product_type_id=4")
+                .uri(credentials.getBaseUrl()+"/api/get-international-airtime-operators",
+                        uriBuilder -> uriBuilder
+                                .queryParam("code", code)
+                                .queryParam("product_type_id", product_type_id)
+                                .build())
                 .header("api-key",credentials.getApiKey())
-                .header("secret-key",credentials.getSecretKey())
+                .header("public-key",credentials.getPublicKey())
                 .retrieve()
                 .bodyToMono(IntlAirtimeOperatorsResponse.class)
                 .block();
         }
-        catch (TransactionException b){
-            throw new IllegalArgumentException(b.getMessage());
+        catch (Exception e){
+            throw new TransactionException (e.getMessage(), null, null);
         }
     }
 
