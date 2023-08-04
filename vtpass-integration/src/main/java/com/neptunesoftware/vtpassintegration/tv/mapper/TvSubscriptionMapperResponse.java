@@ -2,8 +2,9 @@ package com.neptunesoftware.vtpassintegration.tv.mapper;
 
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
+import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
-import com.neptunesoftware.vtpassintegration.tv.response.TvSubscriptionResponseApi;
+import com.neptunesoftware.vtpassintegration.tv.response.SubscriptionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TvSubscriptionMapperResponse {
     private final Credentials credentials;
-    public TransactionRequest  mapper( TvSubscriptionRequest tvRequest, TvSubscriptionResponseApi tvResponse) {
+    public TransactionRequest  mapper( TvSubscriptionRequest tvRequest, SubscriptionResponse tvResponse) {
         return TransactionRequest.builder()
                 .code(tvResponse.getCode())
                 .requestId(tvResponse.getRequestId())
@@ -36,9 +37,11 @@ public class TvSubscriptionMapperResponse {
                 .chargeAmount(String.valueOf(tvResponse.getContent().getTransactions().getTotalAmount()))
                 .taxAmount(null)
                 .tranAmount(String.valueOf(tvResponse.getContent().getTransactions().getAmount()))
-
                 .build();
+    }
 
+    public TransactionResponse mapTvToSubscriptionResponse(SubscriptionResponse responseApi) {
+        return new TransactionResponse(responseApi.getCode(),responseApi.getContent().getTransactions().getStatus(),responseApi.getRequestId());
     }
 
 }
