@@ -38,7 +38,6 @@ public class ThirdPartyInsuranceService {
                 .retrieve()
                 .bodyToMono(ThirdPartyInsurance.class)
                 .block();
-        System.out.println(insuranceResponse);
 
         if (insuranceResponse.code().equals("000")){
             TransactionRequest transactionRequest = mapper.mapRequest(request, insuranceResponse);

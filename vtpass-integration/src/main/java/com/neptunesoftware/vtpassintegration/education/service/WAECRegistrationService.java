@@ -43,7 +43,7 @@ public class WAECRegistrationService {
 
             if (waecRegistrationResponse.getCode().equals("000")){
                 TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
-                log.info("TRANSACTION SUCCESSFUL...");
+                log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
                 return transactionService.saveTransaction(transactionRequest);
             }else {
                 throw new TransactionException(waecRegistrationResponse.getResponse_description(), waecRegistrationResponse.getCode(), waecRegistrationResponse.getRequestId());

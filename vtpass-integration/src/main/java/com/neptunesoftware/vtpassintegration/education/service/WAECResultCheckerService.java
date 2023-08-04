@@ -43,7 +43,7 @@ public class WAECResultCheckerService {
 
         if (waecResultCheckerResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = resultCheckerResponseMapper.mapCheckerRequest(request, waecResultCheckerResponse);
-            log.info("Transaction Successful...");
+            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
             return transactionService.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(waecResultCheckerResponse.getResponse_description(), waecResultCheckerResponse.getCode(), waecResultCheckerResponse.getRequestId());

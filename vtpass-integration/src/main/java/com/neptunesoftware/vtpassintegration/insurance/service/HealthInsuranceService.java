@@ -4,10 +4,7 @@ import com.neptunesoftware.vtpassintegration.commons.service.RequestIdGenerator;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.HealthInsuranceMapper;
 import com.neptunesoftware.vtpassintegration.insurance.request.HealthInsuranceRequest;
-import com.neptunesoftware.vtpassintegration.insurance.response.InsuranceExtraFieldsResponse;
-import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceOptionsResponse;
 import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceResponse;
-import com.neptunesoftware.vtpassintegration.insurance.response.HealthInsuranceVariationResponse;
 import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
@@ -28,18 +25,6 @@ public class HealthInsuranceService {
     private final HealthInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
 
-    public InsuranceExtraFieldsResponse getExtraFields() {
-        String serviceId = "health-insurance-rhl";
-        String apiUrl = "https://sandbox.vtpass.com/api/extra-fields?serviceID=" + serviceId;
-
-        return webClientBuilder.build().get()
-                .uri(apiUrl)
-                .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
-                .retrieve()
-                .bodyToMono(InsuranceExtraFieldsResponse.class)
-                .block();
-    }
 
     public TransactionResponse purchaseHealthInsurance(HealthInsuranceRequest request) {
         log.info("Purchasing Health Insurance product...");
@@ -57,7 +42,7 @@ public class HealthInsuranceService {
 
         if (healthInsuranceResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = mapper.mapRequest(request, healthInsuranceResponse);
-            log.info("Transaction Successful, saved to Database...");
+            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
             return service.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(healthInsuranceResponse.getResponseDescription(), healthInsuranceResponse.getCode(), healthInsuranceResponse.getRequestId());

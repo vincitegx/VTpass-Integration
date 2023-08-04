@@ -42,7 +42,7 @@ public class PersonalAccidentInsuranceService {
         if (response.getCode().equals("000")){
             TransactionRequest transactionRequest = mapper.mapper(request, response);
 
-            log.info("Transaction Successful, saved to Database...");return service.saveTransaction(transactionRequest);
+            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");return service.saveTransaction(transactionRequest);
         }else {
             throw new TransactionException(response.getResponseDescription(), response.getCode(), response.getRequestId());
         }

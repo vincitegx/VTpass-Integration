@@ -46,8 +46,8 @@ public class InsuranceController {
     }
 
     @GetMapping("extra-fields")
-    public ResponseEntity<InsuranceExtraFieldsResponse> getExtraFields() {
-        return ResponseEntity.ok(homeCoverInsuranceService.extraFields());
+    public ResponseEntity<InsuranceExtraFieldsResponse> getExtraFields(@RequestParam String serviceID) {
+        return ResponseEntity.ok(homeCoverInsuranceService.extraFields(serviceID));
     }
 
 }
