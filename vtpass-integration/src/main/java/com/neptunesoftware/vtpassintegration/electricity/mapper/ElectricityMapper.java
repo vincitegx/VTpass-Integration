@@ -3,7 +3,7 @@ package com.neptunesoftware.vtpassintegration.electricity.mapper;
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.electricity.request.ElectricBillRequest;
 import com.neptunesoftware.vtpassintegration.electricity.response.ElectricBillResponse;
-import com.neptunesoftware.vtpassintegration.electricity.response.ElectricBillResponseApi;
+import com.neptunesoftware.vtpassintegration.electricity.response.ElectricityPaymentResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,39 +39,27 @@ public class ElectricityMapper {
                 .build();
     }
 
-    public ElectricBillResponse mapToPostPaidResponse(ElectricBillRequest request, ElectricBillResponseApi electricBillResponse) {
-        return ElectricBillResponse.builder()
-                .code(electricBillResponse.getElectricPostpaidResponse().getCode())
-                .requestId(electricBillResponse.getElectricPostpaidResponse().getRequestId())
-                .transactionId(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getTransactionId())
-                .serviceId(request.getServiceID())
-                .status(String.valueOf(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getStatus()))
-                .description(electricBillResponse.getElectricPostpaidResponse().getResponse_description())
-                .uniqueElement(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getUnique_element())
-                .transactionAmount(String.valueOf(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getAmount()))
-                .transactionType(request.getVariation_code())
-                .transactionPlatform(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getPlatform())
-                .method(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getMethod())
-                .productName(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getProduct_name())
-                .phoneNumber(electricBillResponse.getElectricPostpaidResponse().getContent().getTransactions().getPhone())
-                .build();
-    }
+    public ElectricBillResponse mapToElectricBillResponse(ElectricBillRequest request, ElectricityPaymentResponse electricBillResponse) {
+        String meterType = null;
+        if (request.getVariation_code() == "prepaid")
+            meterType = " prepaid";
+        if (request.getVariation_code() == "postpaid")
+            meterType = " postpaid";
 
-    public ElectricBillResponse mapToPrepaidResponse(ElectricBillRequest request, ElectricBillResponseApi electricBillResponse) {
         return ElectricBillResponse.builder()
-                .code(electricBillResponse.getElectricPrepaidResponse().getCode())
-                .requestId(electricBillResponse.getElectricPrepaidResponse().getRequestId())
-                .transactionId(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getTransactionId())
+                .code(electricBillResponse.getCode())
+                .requestId(electricBillResponse.getRequestId())
+                .transactionId(electricBillResponse.getContent().getTransactions().getTransactionId())
                 .serviceId(request.getServiceID())
-                .status(String.valueOf(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getStatus()))
-                .description(electricBillResponse.getElectricPrepaidResponse().getResponse_description())
-                .uniqueElement(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getUnique_element())
-                .transactionAmount(String.valueOf(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getAmount()))
+                .status(String.valueOf(electricBillResponse.getContent().getTransactions().getStatus()))
+                .description(electricBillResponse.getContent().getTransactions().getProduct_name()+meterType)
+                .uniqueElement(electricBillResponse.getContent().getTransactions().getUnique_element())
+                .transactionAmount(String.valueOf(electricBillResponse.getContent().getTransactions().getAmount()))
                 .transactionType(request.getVariation_code())
-                .transactionPlatform(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getPlatform())
-                .method(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getMethod())
-                .productName(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getProduct_name())
-                .phoneNumber(electricBillResponse.getElectricPrepaidResponse().getContent().getTransactions().getPhone())
+                .transactionPlatform(electricBillResponse.getContent().getTransactions().getPlatform())
+                .method(electricBillResponse.getContent().getTransactions().getMethod())
+                .productName(electricBillResponse.getContent().getTransactions().getProduct_name())
+                .phoneNumber(electricBillResponse.getContent().getTransactions().getPhone())
                 .build();
     }
 }
