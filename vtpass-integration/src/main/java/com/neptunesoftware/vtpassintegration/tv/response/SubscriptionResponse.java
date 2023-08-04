@@ -6,7 +6,7 @@ import com.neptunesoftware.vtpassintegration.tv.domain.TvTransactionDate;
 import lombok.Data;
 
 @Data
-public class TvSubscriptionResponseApi {
+public class SubscriptionResponse {
     private String code;
     private TvContent content;
     @JsonProperty("response_description")
