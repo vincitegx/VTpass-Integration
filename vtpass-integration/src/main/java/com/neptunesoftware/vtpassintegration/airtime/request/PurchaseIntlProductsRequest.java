@@ -7,6 +7,8 @@ public class PurchaseIntlProductsRequest {
     String request_id;
     @NonNull
     String serviceID;
+
+    @NonNull
     String billersCode;
     @NonNull
     String variation_code;
@@ -19,5 +21,7 @@ public class PurchaseIntlProductsRequest {
     String country_code;
     @NonNull
     String product_type_id;
+
+    @NonNull
     String email;
 }

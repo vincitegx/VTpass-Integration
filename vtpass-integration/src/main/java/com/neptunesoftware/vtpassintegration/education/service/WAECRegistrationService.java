@@ -11,13 +11,13 @@ import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequ
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 public class WAECRegistrationService {
 
     private final Credentials credentials;
@@ -43,7 +43,7 @@ public class WAECRegistrationService {
 
             if (waecRegistrationResponse.getCode().equals("000")){
                 TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
-                log.info("TRANSACTION SUCCESSFUL...");
+                log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
                 return transactionService.saveTransaction(transactionRequest);
             }else {
                 throw new TransactionException(waecRegistrationResponse.getResponse_description(), waecRegistrationResponse.getCode(), waecRegistrationResponse.getRequestId());

@@ -3,7 +3,6 @@ package com.neptunesoftware.vtpassintegration.education.mapper;
 
 import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.education.request.ProductRegRequest;
-
 import com.neptunesoftware.vtpassintegration.education.response.ProductRegResponse;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,6 @@ public class EducationPaymentResponseMapper {
                 .tranMethod(response.getContent().getTransactions().getMethod())
                 .tranPurpose(response.getContent().getTransactions().getProduct_name())
                 .tranDate(Date.from(Instant.now()).toString())
-
                 .build();
     }
 }
