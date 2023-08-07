@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TvController {
     private final TvServices tvServices;
 
-    @PostMapping("/subscription")
+    @PostMapping("subscription")
     public ResponseEntity<TransactionResponse> tvSubscription(@RequestBody TvSubscriptionRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvSubscription(request));
     }

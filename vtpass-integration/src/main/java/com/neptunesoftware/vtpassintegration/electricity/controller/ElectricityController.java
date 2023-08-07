@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/electricity")
 public class ElectricityController {
     private final ElectricityBillService electricityService;
-        @PostMapping("/payment")
+        @PostMapping("payment")
         public ResponseEntity<TransactionResponse> electricityPayment(@RequestBody ElectricBillRequest request) {
             return ResponseEntity.status(HttpStatus.OK).body(electricityService.electricityPayment(request));
         }
