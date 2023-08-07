@@ -41,9 +41,9 @@ public class ElectricityMapper {
 
     public ElectricBillResponse mapToElectricBillResponse(ElectricBillRequest request, ElectricityPaymentResponse electricBillResponse) {
         String meterType = null;
-        if (request.getVariation_code() == "prepaid")
+        if (request.getVariation_code().equalsIgnoreCase("prepaid"))
             meterType = " prepaid";
-        if (request.getVariation_code() == "postpaid")
+        if (request.getVariation_code().equalsIgnoreCase("postpaid"))
             meterType = " postpaid";
 
         return ElectricBillResponse.builder()
