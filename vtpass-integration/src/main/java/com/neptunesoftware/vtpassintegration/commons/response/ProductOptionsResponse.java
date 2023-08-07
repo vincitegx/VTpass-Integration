@@ -1,5 +1,7 @@
 package com.neptunesoftware.vtpassintegration.commons.response;
 
+import java.util.Map;
+
 public record ProductOptionsResponse(
         String response_description,
         Content content
@@ -10,14 +12,8 @@ public record ProductOptionsResponse(
             String optionName,
             String optionType,
             String optionLabel,
-            Options options
-    ) {
-    }
-
-    public record Options(
-            String adult,
-            String child,
-            String infant
+            String optionRule,
+            Map<String, Object> options
     ) {
     }
 }

@@ -20,7 +20,7 @@ public class VariationCodeService {
                     .uri(credentials.getBaseUrl()+"/api/service-variations",
                             uriBuilder -> uriBuilder.queryParam("serviceID", serviceID).build())
                     .header("api-key", credentials.getApiKey())
-                    .header("secret-key", credentials.getSecretKey())
+                    .header("public-key", credentials.getPublicKey())
                     .retrieve()
                     .bodyToMono(VariationCodeResponse.class)
                     .block();

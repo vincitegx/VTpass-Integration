@@ -1,5 +1,7 @@
 package com.neptunesoftware.vtpassintegration.commons.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 public record VariationCodeResponse(
@@ -14,7 +16,7 @@ public record VariationCodeResponse(
             List<Variations> varations
     ) {
     }
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public record Variations(
             String variation_code,
             String name,

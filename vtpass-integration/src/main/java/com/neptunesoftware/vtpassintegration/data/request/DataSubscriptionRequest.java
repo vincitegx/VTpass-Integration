@@ -12,9 +12,7 @@ public class DataSubscriptionRequest {
         private String billersCode;
         @NonNull
         private String variation_code;
-        @NonNull
         Integer quantity;
-        @NonNull
         Integer amount;
         @NonNull
         private String phone;

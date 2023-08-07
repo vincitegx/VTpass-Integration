@@ -20,7 +20,7 @@ public class ServiceIdService {
                     .uri(credentials.getBaseUrl()+"/api/services",
                             uriBuilder -> uriBuilder.queryParam("identifier", identifier).build())
                     .header("api-key", credentials.getApiKey())
-                    .header("secret-key", credentials.getSecretKey())
+                    .header("public-key", credentials.getPublicKey())
                     .retrieve()
                     .bodyToMono(ServiceIdResponse.class)
                     .block();

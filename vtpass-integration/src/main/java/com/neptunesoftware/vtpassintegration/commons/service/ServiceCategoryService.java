@@ -16,7 +16,7 @@ public class ServiceCategoryService {
         return webClientBuilder.build().get()
                 .uri(credentials.getBaseUrl()+"/api/service-categories")
                 .header("api-key", credentials.getApiKey())
-                .header("secret-key", credentials.getSecretKey())
+                .header("public-key", credentials.getPublicKey())
                 .retrieve()
                 .bodyToMono(ServiceCategoryResponse.class)
                 .block();
