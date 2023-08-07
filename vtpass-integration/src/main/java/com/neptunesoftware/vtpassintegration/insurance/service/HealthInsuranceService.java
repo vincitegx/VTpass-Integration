@@ -27,6 +27,7 @@ public class HealthInsuranceService {
 
 
     public TransactionResponse purchaseHealthInsurance(HealthInsuranceRequest request) {
+        TransactionResponse transactionResponse;
         log.info("Purchasing Health Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
@@ -42,8 +43,9 @@ public class HealthInsuranceService {
 
         if (healthInsuranceResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = mapper.mapRequest(request, healthInsuranceResponse);
+            transactionResponse = service.saveTransaction(transactionRequest);
             log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
-            return service.saveTransaction(transactionRequest);
+            return transactionResponse;
         }else {
             throw new TransactionException(healthInsuranceResponse.getResponseDescription(), healthInsuranceResponse.getCode(), healthInsuranceResponse.getRequestId());
         }

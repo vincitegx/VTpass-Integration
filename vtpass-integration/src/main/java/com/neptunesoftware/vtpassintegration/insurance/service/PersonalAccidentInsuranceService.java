@@ -26,6 +26,7 @@ public class PersonalAccidentInsuranceService {
     private final PersonalAccidentInsuranceMapper mapper;
 
     public TransactionResponse purchasePersonalAccidentInsurance(PersonalAccidentInsurancePurchaseRequest request) {
+        TransactionResponse transactionResponse;
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
         log.info("Purchasing Personal Accident Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
@@ -41,8 +42,9 @@ public class PersonalAccidentInsuranceService {
 
         if (response.getCode().equals("000")){
             TransactionRequest transactionRequest = mapper.mapper(request, response);
-
-            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");return service.saveTransaction(transactionRequest);
+            transactionResponse = service.saveTransaction(transactionRequest);
+            log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
+            return transactionResponse;
         }else {
             throw new TransactionException(response.getResponseDescription(), response.getCode(), response.getRequestId());
         }

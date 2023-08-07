@@ -8,7 +8,7 @@ public class TvSubscriptionRequest {
     private String request_id;
     @NonNull
     private String serviceID;
-    private int amount;
+    private Integer amount;
     @NonNull
     private String billersCode;
     @NonNull
