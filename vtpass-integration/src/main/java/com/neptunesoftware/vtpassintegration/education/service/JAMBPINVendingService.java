@@ -43,6 +43,7 @@ public class JAMBPINVendingService {
     }
 
     public TransactionResponse purchaseJAMBProduct(JAMBProductPurchaseRequest request) {
+        TransactionResponse transactionResponse;
         log.info("Purchasing JAMB product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
@@ -58,8 +59,9 @@ public class JAMBPINVendingService {
 
         if (purchaseResponse.getCode().equals("000")){
             TransactionRequest transactionRequest = responseMapper.mapPinVendingRequest(request, purchaseResponse);
+            transactionResponse = transactionService.saveTransaction(transactionRequest);
             log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
-            return transactionService.saveTransaction(transactionRequest);
+            return transactionResponse;
         }else {
             throw new TransactionException(purchaseResponse.getCode(), purchaseResponse.getRequestId(), purchaseResponse.getPurchased_code());
         }

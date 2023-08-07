@@ -4,7 +4,6 @@ import com.neptunesoftware.vtpassintegration.insurance.request.HealthInsuranceRe
 import com.neptunesoftware.vtpassintegration.insurance.request.HomeCoverPurchaseRequest;
 import com.neptunesoftware.vtpassintegration.insurance.request.PersonalAccidentInsurancePurchaseRequest;
 import com.neptunesoftware.vtpassintegration.insurance.request.ThirdPartyInsuranceRequest;
-import com.neptunesoftware.vtpassintegration.insurance.response.InsuranceExtraFieldsResponse;
 import com.neptunesoftware.vtpassintegration.insurance.service.HealthInsuranceService;
 import com.neptunesoftware.vtpassintegration.insurance.service.HomeCoverInsuranceService;
 import com.neptunesoftware.vtpassintegration.insurance.service.PersonalAccidentInsuranceService;
@@ -12,7 +11,10 @@ import com.neptunesoftware.vtpassintegration.insurance.service.ThirdPartyInsuran
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/insurance")
@@ -43,11 +45,6 @@ public class InsuranceController {
     @PostMapping("third-party")
     public ResponseEntity<TransactionResponse> purchaseMotorProduct(@RequestBody ThirdPartyInsuranceRequest request) {
         return ResponseEntity.ok(thirdPartyInsuranceService.purchaseProduct(request));
-    }
-
-    @GetMapping("extra-fields")
-    public ResponseEntity<InsuranceExtraFieldsResponse> getExtraFields(@RequestParam String serviceID) {
-        return ResponseEntity.ok(homeCoverInsuranceService.extraFields(serviceID));
     }
 
 }

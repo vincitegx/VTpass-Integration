@@ -25,6 +25,7 @@ public class ThirdPartyInsuranceService {
     private final ThirdPartyInsuranceMapper mapper;
     private final RequestIdGenerator requestIdGenerator;
     public TransactionResponse purchaseProduct(ThirdPartyInsuranceRequest request) {
+        TransactionResponse transactionResponse;
         log.info("Purchasing Third party Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
@@ -41,8 +42,9 @@ public class ThirdPartyInsuranceService {
 
         if (insuranceResponse.code().equals("000")){
             TransactionRequest transactionRequest = mapper.mapRequest(request, insuranceResponse);
+            transactionResponse = service.saveTransaction(transactionRequest);
             log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
-            return service.saveTransaction(transactionRequest);
+            return transactionResponse;
         }else {
             throw new TransactionException(insuranceResponse.code(), insuranceResponse.response_description(), insuranceResponse.requestId());
         }
