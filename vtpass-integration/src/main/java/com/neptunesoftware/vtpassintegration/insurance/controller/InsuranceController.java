@@ -1,7 +1,5 @@
 package com.neptunesoftware.vtpassintegration.insurance.controller;
 
-import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceContent;
-import com.neptunesoftware.vtpassintegration.insurance.domain.InsuranceExtraField;
 import com.neptunesoftware.vtpassintegration.insurance.request.HealthInsuranceRequest;
 import com.neptunesoftware.vtpassintegration.insurance.request.HomeCoverPurchaseRequest;
 import com.neptunesoftware.vtpassintegration.insurance.request.PersonalAccidentInsurancePurchaseRequest;
@@ -15,8 +13,6 @@ import com.neptunesoftware.vtpassintegration.transaction.response.TransactionRes
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/insurance")
@@ -50,8 +46,8 @@ public class InsuranceController {
     }
 
     @GetMapping("extra-fields")
-    public ResponseEntity<List<InsuranceExtraField>> getExtraFields() {
-        return ResponseEntity.ok(homeCoverInsuranceService.extraFields());
+    public ResponseEntity<InsuranceExtraFieldsResponse> getExtraFields(@RequestParam String serviceID) {
+        return ResponseEntity.ok(homeCoverInsuranceService.extraFields(serviceID));
     }
 
 }

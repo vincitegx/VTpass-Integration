@@ -2,34 +2,23 @@ package com.neptunesoftware.vtpassintegration.tv.controller;
 
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
 import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionRequest;
-import com.neptunesoftware.vtpassintegration.tv.request.TvSubscriptionStatusRequest;
-import com.neptunesoftware.vtpassintegration.tv.response.TvVariationResponseApi;
 import com.neptunesoftware.vtpassintegration.tv.service.TvServices;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/tv")
-@Log4j2
 public class TvController {
     private final TvServices tvServices;
 
- @GetMapping("/tvVariations")
-    public ResponseEntity<TvVariationResponseApi> tvVariations(@RequestParam("serviceID") String serviceId) {
-        return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvVariations(serviceId));
-    }
-
-    @PostMapping("/tv-subscription")
+    @PostMapping("/subscription")
     public ResponseEntity<TransactionResponse> tvSubscription(@RequestBody TvSubscriptionRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvSubscription(request));
-    }
-
-    @PostMapping("/subscription-status")
-    public ResponseEntity<TransactionResponse> tvSubscriptionStatus(@RequestBody TvSubscriptionStatusRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(tvServices.tvSubscriptionStatus(request));
     }
 }
