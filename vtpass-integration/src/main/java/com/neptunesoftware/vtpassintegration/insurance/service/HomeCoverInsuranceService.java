@@ -5,7 +5,6 @@ import com.neptunesoftware.vtpassintegration.config.Credentials;
 import com.neptunesoftware.vtpassintegration.insurance.mapper.HomeCoverInsuranceResponseMapper;
 import com.neptunesoftware.vtpassintegration.insurance.request.HomeCoverPurchaseRequest;
 import com.neptunesoftware.vtpassintegration.insurance.response.HomeCoverPurchaseResponse;
-import com.neptunesoftware.vtpassintegration.insurance.response.InsuranceExtraFieldsResponse;
 import com.neptunesoftware.vtpassintegration.transaction.exception.TransactionException;
 import com.neptunesoftware.vtpassintegration.transaction.request.TransactionRequest;
 import com.neptunesoftware.vtpassintegration.transaction.response.TransactionResponse;
@@ -26,26 +25,9 @@ public class HomeCoverInsuranceService {
     private final HomeCoverInsuranceResponseMapper responseMapper;
     private final RequestIdGenerator requestIdGenerator;
 
-    public InsuranceExtraFieldsResponse extraFields(String serviceID) {
-        try {
-            log.info("Fetching extra fields for Insurance...");
-            return webClientBuilder.build().get()
-                    .uri(credentials.getBaseUrl() + "/api/extra-fields",
-                            uriBuilder -> uriBuilder.queryParam("serviceID", serviceID)
-                                    .build())
-                    .header("api-key", credentials.getApiKey())
-                    .header("secret-key", credentials.getSecretKey())
-                    .retrieve()
-                    .bodyToMono(InsuranceExtraFieldsResponse.class)
-                    .block();
-        } catch (Exception ex) {
-            throw new TransactionException("ERROR, EXTRA FIELDS DOES NOT EXIST", "012", null);
-        }
-    }
-
-
     // Method to purchase Home Cover Insurance
     public TransactionResponse purchaseHomeCoverInsurance(HomeCoverPurchaseRequest request) {
+        TransactionResponse transactionResponse;
         log.info("Purchasing Home cover Insurance product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
@@ -62,8 +44,9 @@ public class HomeCoverInsuranceService {
 
         if (purchaseResponse.getCode().equals("000")) {
             TransactionRequest transactionRequest = responseMapper.mapRequest(request, purchaseResponse);
+            transactionResponse = transactionService.saveTransaction(transactionRequest);
             log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE....");
-            return transactionService.saveTransaction(transactionRequest);
+            return transactionResponse;
         } else {
             throw new TransactionException(purchaseResponse.getResponse_description(), purchaseResponse.getCode(), purchaseResponse.getRequestId());
         }

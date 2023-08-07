@@ -27,6 +27,7 @@ public class WAECRegistrationService {
     private final RequestIdGenerator requestIdGenerator;
 
     public TransactionResponse purchaseWAECRegistration(ProductRegRequest request) {
+        TransactionResponse transactionResponse;
         log.info("Purchasing Waec Registration product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl() + "/api/pay";
@@ -43,8 +44,9 @@ public class WAECRegistrationService {
 
             if (waecRegistrationResponse.getCode().equals("000")){
                 TransactionRequest transactionRequest = responseMapper.mapRequest(request, waecRegistrationResponse);
+                transactionResponse = transactionService.saveTransaction(transactionRequest);
                 log.info("TRANSACTION SUCCESSFUL, SAVED TO DATABASE...");
-                return transactionService.saveTransaction(transactionRequest);
+                return transactionResponse;
             }else {
                 throw new TransactionException(waecRegistrationResponse.getResponse_description(), waecRegistrationResponse.getCode(), waecRegistrationResponse.getRequestId());
             }
