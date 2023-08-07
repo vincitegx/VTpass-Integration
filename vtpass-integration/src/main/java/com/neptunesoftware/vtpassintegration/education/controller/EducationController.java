@@ -27,12 +27,12 @@ public class EducationController {
         return ResponseEntity.ok(waecRegistrationService.purchaseWAECRegistration(request));
     }
 
-    @PostMapping("waec-result")
+    @PostMapping("waec/result-checker")
     public ResponseEntity<TransactionResponse> purchaseWAECResult(@RequestBody ProductRegRequest request) {
         return ResponseEntity.ok(waecRegistrationService.purchaseWAECRegistration(request));
     }
 
-    @PostMapping("verify")
+    @PostMapping("jamb/verify")
     public ResponseEntity<JAMBProfileVerificationResponse> verifyJAMBProfile(@RequestBody JAMBProfileVerificationRequest request) {
         JAMBProfileVerificationResponse verificationResponse = jambPinVendingService.verifyJAMBProfile(request);
         return ResponseEntity.ok(verificationResponse);
