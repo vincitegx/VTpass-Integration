@@ -1,25 +1,28 @@
-2023-08-07 10:46:49 [main] INFO  : Starting VtpassIntegrationApplication using Java 17.0.7 with PID 21444 (C:\Users\Neptune\Downloads\vtpass-integration\vtpass-integration\target\classes started by Neptune in C:\Users\Neptune\Downloads\vtpass-integration)
-2023-08-07 10:46:49 [main] INFO  : The following 1 profile is active: "dev"
-2023-08-07 10:46:52 [main] INFO  : Tomcat initialized with port(s): 8080 (http)
-2023-08-07 10:46:52 [main] INFO  : Initializing ProtocolHandler ["http-nio-8080"]
-2023-08-07 10:46:52 [main] INFO  : Starting service [Tomcat]
-2023-08-07 10:46:52 [main] INFO  : Starting Servlet engine: [Apache Tomcat/10.1.11]
-2023-08-07 10:46:52 [main] INFO  : Initializing Spring embedded WebApplicationContext
-2023-08-07 10:46:52 [main] INFO  : Root WebApplicationContext: initialization completed in 2579 ms
-2023-08-07 10:46:52 [main] DEBUG : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
-2023-08-07 10:46:52 [main] DEBUG : Mapping servlets: dispatcherServlet urls=[/]
-2023-08-07 10:46:54 [main] INFO  : Starting ProtocolHandler ["http-nio-8080"]
-2023-08-07 10:46:54 [main] INFO  : Tomcat started on port(s): 8080 (http) with context path ''
-2023-08-07 10:46:54 [main] INFO  : Started VtpassIntegrationApplication in 4.897 seconds (process running for 6.068)
-2023-08-07 10:48:14 [http-nio-8080-exec-2] INFO  : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-08-07 10:48:14 [http-nio-8080-exec-2] INFO  : Initializing Servlet 'dispatcherServlet'
-2023-08-07 10:48:14 [http-nio-8080-exec-2] INFO  : Completed initialization in 3 ms
-2023-08-07 10:48:14 [http-nio-8080-exec-2] INFO  : Purchasing Waec Registration product...
-2023-08-07 10:48:16 [reactor-http-nio-2] DEBUG : [47b7b49] Encoding [ProductRegRequest(request_id=202308071048Q4mj, serviceID=waec-registration, variation_code=waec-regi (truncated)...]
-2023-08-07 10:48:16 [reactor-http-nio-2] DEBUG : [47b7b49] [c2506e4b-1, L:/10.152.2.12:56401 - R:sandbox.vtpass.com/167.99.195.129:443] Decoded [ProductRegResponse(code=000, content=Content(transactions=Transaction(status=delivered, product_name (truncated)...]
-2023-08-07 10:48:16 [http-nio-8080-exec-2] INFO  : TRANSACTION SUCCESSFUL, SAVED TO DATABASE...
-2023-08-07 10:48:16 [http-nio-8080-exec-2] INFO  : HikariPool-1 - Starting...
-2023-08-07 10:48:16 [http-nio-8080-exec-2] INFO  : HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@6544deaf
-2023-08-07 10:48:16 [http-nio-8080-exec-2] INFO  : HikariPool-1 - Start completed.
-2023-08-07 10:48:54 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown initiated...
-2023-08-07 10:48:54 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown completed.
+2023-08-21 11:25:41 [main] INFO  : Starting VtpassIntegrationApplication using Java 17.0.7 with PID 15916 (C:\Users\Neptune\Downloads\vtpass-integration\vtpass-integration\target\classes started by Neptune in C:\Users\Neptune\Downloads\vtpass-integration)
+2023-08-21 11:25:41 [main] INFO  : The following 1 profile is active: "dev"
+2023-08-21 11:25:45 [main] INFO  : Tomcat initialized with port(s): 8080 (http)
+2023-08-21 11:25:45 [main] INFO  : Initializing ProtocolHandler ["http-nio-8080"]
+2023-08-21 11:25:45 [main] INFO  : Starting service [Tomcat]
+2023-08-21 11:25:45 [main] INFO  : Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-08-21 11:25:45 [main] INFO  : Initializing Spring embedded WebApplicationContext
+2023-08-21 11:25:45 [main] INFO  : Root WebApplicationContext: initialization completed in 3329 ms
+2023-08-21 11:25:45 [main] DEBUG : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2023-08-21 11:25:45 [main] DEBUG : Mapping servlets: dispatcherServlet urls=[/]
+2023-08-21 11:25:47 [main] INFO  : Starting ProtocolHandler ["http-nio-8080"]
+2023-08-21 11:25:47 [main] INFO  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-21 11:25:47 [main] INFO  : Started VtpassIntegrationApplication in 6.546 seconds (process running for 8.145)
+2023-08-21 11:26:03 [http-nio-8080-exec-2] INFO  : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-21 11:26:03 [http-nio-8080-exec-2] INFO  : Initializing Servlet 'dispatcherServlet'
+2023-08-21 11:26:03 [http-nio-8080-exec-2] INFO  : Completed initialization in 1 ms
+2023-08-21 11:26:04 [http-nio-8080-exec-2] INFO  : Purchasing JAMB product...
+2023-08-21 11:26:04 [http-nio-8080-exec-2] INFO  : Verifying JAMB profile...
+2023-08-21 11:26:05 [reactor-http-nio-2] DEBUG : [5fc847a] Encoding [JAMBProfileVerificationRequest(billersCode=0123456789, serviceID=jamb, type=utme)]
+2023-08-21 11:26:06 [reactor-http-nio-2] DEBUG : [5fc847a] [4d031c2e-1, L:/10.152.2.12:51441 - R:sandbox.vtpass.com/167.99.195.129:443] Decoded [JAMBProfileVerificationResponse[code=000, content=Content[Customer_Name=Capital James]]]
+2023-08-21 11:26:06 [reactor-http-nio-3] DEBUG : [c4a17bf] Encoding [JAMBProductPurchaseRequest(request_id=2023082111262UCG, serviceID=jamb, variation_code=utme, billers (truncated)...]
+2023-08-21 11:26:07 [reactor-http-nio-3] DEBUG : [c4a17bf] [8e6a7d38-1, L:/10.152.2.12:51442 - R:sandbox.vtpass.com/167.99.195.129:443] Decoded [JAMBProductPurchaseResponse(code=000, content=Content(transactions=Transaction(status=delivered, pro (truncated)...]
+2023-08-21 11:26:07 [http-nio-8080-exec-2] INFO  : HikariPool-1 - Starting...
+2023-08-21 11:26:07 [http-nio-8080-exec-2] INFO  : HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@20c836f4
+2023-08-21 11:26:07 [http-nio-8080-exec-2] INFO  : HikariPool-1 - Start completed.
+2023-08-21 11:26:08 [http-nio-8080-exec-2] INFO  : TRANSACTION SUCCESSFUL, SAVED TO DATABASE...
+2023-08-21 11:26:19 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown initiated...
+2023-08-21 11:26:19 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown completed.

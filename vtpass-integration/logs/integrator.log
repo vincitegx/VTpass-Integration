@@ -1,0 +1,3 @@
+2023-08-08 16:05:39 [main] INFO  : Starting VtpassIntegrationApplicationTests using Java 17.0.7 with PID 8 (started by Neptune in C:\Users\Neptune\Downloads\vtpass-integration\vtpass-integration)
+2023-08-08 16:05:39 [main] INFO  : The following 1 profile is active: "dev"
+2023-08-08 16:05:42 [main] INFO  : Started VtpassIntegrationApplicationTests in 3.122 seconds (process running for 4.672)

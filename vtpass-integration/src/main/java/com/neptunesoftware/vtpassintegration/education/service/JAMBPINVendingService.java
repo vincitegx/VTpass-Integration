@@ -47,7 +47,11 @@ public class JAMBPINVendingService {
         log.info("Purchasing JAMB product...");
         request.setRequest_id(requestIdGenerator.apply(4));
         String apiUrl = credentials.getBaseUrl()+"/api/pay";
-
+        JAMBProfileVerificationRequest jambProfileVerificationRequest = new JAMBProfileVerificationRequest(request.getBillersCode(), request.getServiceID(), request.getVariation_code());
+        JAMBProfileVerificationResponse jambProfileVerificationResponse = verifyJAMBProfile(jambProfileVerificationRequest);
+        if(jambProfileVerificationResponse.content().Customer_Name().equals(null)){
+            throw new TransactionException("Invalid Jamb Profile ID", null, null);
+        }
         JAMBProductPurchaseResponse purchaseResponse = webClientBuilder.build().post()
                 .uri(apiUrl)
                 .header("api-key", credentials.getApiKey())

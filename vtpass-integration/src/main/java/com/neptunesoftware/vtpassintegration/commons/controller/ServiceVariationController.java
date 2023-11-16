@@ -17,6 +17,11 @@ public class ServiceVariationController {
     private final VariationCodeService variationCodeService;
     @GetMapping
     public ResponseEntity<VariationCodeResponse> fetchVariationCode(@RequestParam String serviceID ) {
-        return ResponseEntity.ok(variationCodeService.getServiceId(serviceID));
+        return ResponseEntity.ok(variationCodeService.getVariationCode(serviceID));
+    }
+
+    @GetMapping("airtime/intl")
+    public ResponseEntity<VariationCodeResponse> fetchVariationCodeAirtimeIntl(@RequestParam String serviceID, @RequestParam String operator_id, String product_type_id ) {
+        return ResponseEntity.ok(variationCodeService.getVariationCodeAirtimeIntl(serviceID, operator_id, product_type_id));
     }
 }

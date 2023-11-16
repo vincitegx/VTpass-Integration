@@ -14,11 +14,28 @@ public class VariationCodeService {
     private final Credentials credentials;
     private final WebClient.Builder webClientBuilder;
 
-    public VariationCodeResponse getServiceId(String serviceID){
+    public VariationCodeResponse getVariationCode(String serviceID){
         try{
             return webClientBuilder.build().get()
                     .uri(credentials.getBaseUrl()+"/api/service-variations",
                             uriBuilder -> uriBuilder.queryParam("serviceID", serviceID).build())
+                    .header("api-key", credentials.getApiKey())
+                    .header("public-key", credentials.getPublicKey())
+                    .retrieve()
+                    .bodyToMono(VariationCodeResponse.class)
+                    .block();
+        }catch (Exception ex){
+            throw new TransactionException("VARIATION CODE DOES NOT EXIST", "010", null);
+        }
+    }
+
+    public VariationCodeResponse getVariationCodeAirtimeIntl(String serviceID, String operatorId, String productTypeId) {
+        try{
+            return webClientBuilder.build().get()
+                    .uri(credentials.getBaseUrl()+"/api/service-variations",
+                            uriBuilder -> uriBuilder.queryParam("serviceID", serviceID)
+                                    .queryParam("operator_id", operatorId)
+                                    .queryParam("product_type_id", productTypeId).build())
                     .header("api-key", credentials.getApiKey())
                     .header("public-key", credentials.getPublicKey())
                     .retrieve()

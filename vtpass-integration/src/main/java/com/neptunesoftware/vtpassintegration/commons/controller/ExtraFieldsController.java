@@ -2,7 +2,6 @@ package com.neptunesoftware.vtpassintegration.commons.controller;
 
 import com.neptunesoftware.vtpassintegration.commons.response.ExtraFieldsResponse;
 import com.neptunesoftware.vtpassintegration.commons.service.ExtraFieldsService;
-import com.neptunesoftware.vtpassintegration.insurance.response.InsuranceExtraFieldsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
